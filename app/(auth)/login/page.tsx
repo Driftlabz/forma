@@ -3,7 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Space_Grotesk, Inter } from 'next/font/google'
 import { createClient } from '@/lib/supabase/client'
+
+const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['700'] })
+const inter = Inter({ subsets: ['latin'], weight: ['400', '500'] })
 
 export default function LoginPage() {
   const router = useRouter()
@@ -18,10 +22,7 @@ export default function LoginPage() {
     setLoading(true)
 
     const supabase = createClient()
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
+    const { error: authError } = await supabase.auth.signInWithPassword({ email, password })
 
     if (authError) {
       setError(authError.message)
@@ -34,23 +35,87 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#050505] flex flex-col px-6 py-16">
-      <div className="mb-12">
-        <span className="text-[#1A6FFF] text-sm font-body tracking-widest uppercase">Forma</span>
-        <span className="text-[#ECEAE5]/30 text-sm font-body"> by Driftlabs</span>
-      </div>
+    <div style={{ display: 'flex', minHeight: '100vh', background: '#050505' }}>
 
-      <div className="max-w-sm">
-        <h1 className="font-heading text-3xl font-semibold text-[#ECEAE5] mb-2">
+      {/* LEFT COLUMN */}
+      <div style={{
+        width: '45%',
+        minHeight: '100vh',
+        background: '#050505',
+        padding: '64px 0 64px 80px',
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        position: 'relative',
+        zIndex: 1,
+        flexShrink: 0,
+      }}
+        className="auth-left"
+      >
+        {/* Eyebrow */}
+        <div style={{ marginBottom: '64px' }}>
+          <span style={{
+            fontFamily: inter.style.fontFamily,
+            fontSize: '11px',
+            fontWeight: 500,
+            letterSpacing: '0.12em',
+            color: '#1A6FFF',
+            textTransform: 'uppercase',
+          }}>
+            FORMA
+          </span>
+          <span style={{
+            fontFamily: inter.style.fontFamily,
+            fontSize: '11px',
+            fontWeight: 500,
+            letterSpacing: '0.12em',
+            color: 'rgba(236,234,229,0.35)',
+            textTransform: 'uppercase',
+          }}>
+            {' '}by Driftlabs
+          </span>
+        </div>
+
+        {/* Heading */}
+        <h1 style={{
+          fontFamily: spaceGrotesk.style.fontFamily,
+          fontSize: '48px',
+          fontWeight: 700,
+          letterSpacing: '-0.02em',
+          color: '#ECEAE5',
+          margin: 0,
+          lineHeight: 1.05,
+        }}>
           Sign in
         </h1>
-        <p className="font-body text-[#ECEAE5]/50 text-sm mb-10">
-          Welcome back to Forma.
+
+        {/* Subtext */}
+        <p style={{
+          fontFamily: inter.style.fontFamily,
+          fontSize: '16px',
+          fontWeight: 400,
+          color: 'rgba(236,234,229,0.45)',
+          marginTop: '12px',
+          marginBottom: '48px',
+        }}>
+          Welcome back.
         </p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="block font-body text-xs text-[#ECEAE5]/50 mb-1.5 uppercase tracking-wider">
+        {/* Form */}
+        <form onSubmit={handleSubmit} style={{ width: '100%', maxWidth: '380px' }}>
+
+          {/* Email */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              fontFamily: inter.style.fontFamily,
+              fontSize: '11px',
+              fontWeight: 500,
+              letterSpacing: '0.10em',
+              color: 'rgba(236,234,229,0.45)',
+              textTransform: 'uppercase',
+              marginBottom: '8px',
+            }}>
               Email
             </label>
             <input
@@ -59,13 +124,38 @@ export default function LoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               required
               autoComplete="email"
-              className="w-full bg-[#0F0F0F] border border-[#1E1E1E] text-[#ECEAE5] font-body text-sm px-4 py-3 focus:outline-none focus:border-[#1A6FFF] transition-colors placeholder:text-[#ECEAE5]/20"
               placeholder="you@example.com"
+              style={{
+                width: '100%',
+                height: '48px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: '0px',
+                color: '#ECEAE5',
+                fontFamily: inter.style.fontFamily,
+                fontSize: '16px',
+                padding: '0 16px',
+                outline: 'none',
+                transition: 'border-color 0.15s ease',
+                boxSizing: 'border-box',
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(26,111,255,0.5)' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
             />
           </div>
 
-          <div>
-            <label className="block font-body text-xs text-[#ECEAE5]/50 mb-1.5 uppercase tracking-wider">
+          {/* Password */}
+          <div style={{ marginBottom: '24px' }}>
+            <label style={{
+              display: 'block',
+              fontFamily: inter.style.fontFamily,
+              fontSize: '11px',
+              fontWeight: 500,
+              letterSpacing: '0.10em',
+              color: 'rgba(236,234,229,0.45)',
+              textTransform: 'uppercase',
+              marginBottom: '8px',
+            }}>
               Password
             </label>
             <input
@@ -74,33 +164,149 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               required
               autoComplete="current-password"
-              className="w-full bg-[#0F0F0F] border border-[#1E1E1E] text-[#ECEAE5] font-body text-sm px-4 py-3 focus:outline-none focus:border-[#1A6FFF] transition-colors placeholder:text-[#ECEAE5]/20"
               placeholder="••••••••"
+              style={{
+                width: '100%',
+                height: '48px',
+                background: 'rgba(255,255,255,0.04)',
+                border: '1px solid rgba(255,255,255,0.07)',
+                borderRadius: '0px',
+                color: '#ECEAE5',
+                fontFamily: inter.style.fontFamily,
+                fontSize: '16px',
+                padding: '0 16px',
+                outline: 'none',
+                transition: 'border-color 0.15s ease',
+                boxSizing: 'border-box',
+              }}
+              onFocus={(e) => { e.currentTarget.style.borderColor = 'rgba(26,111,255,0.5)' }}
+              onBlur={(e) => { e.currentTarget.style.borderColor = 'rgba(255,255,255,0.07)' }}
             />
           </div>
 
+          {/* Error */}
           {error && (
-            <p className="font-body text-sm text-[#DC2626] py-2">
+            <p style={{
+              fontFamily: inter.style.fontFamily,
+              fontSize: '13px',
+              color: '#DC2626',
+              marginBottom: '8px',
+              marginTop: '-8px',
+            }}>
               {error}
             </p>
           )}
 
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#1A6FFF] text-white font-body text-sm font-medium px-4 py-3 mt-2 hover:bg-[#1557CC] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              width: '100%',
+              height: '48px',
+              background: loading ? 'rgba(26,111,255,0.5)' : '#1A6FFF',
+              color: '#ffffff',
+              border: 'none',
+              borderRadius: '0px',
+              fontFamily: inter.style.fontFamily,
+              fontSize: '14px',
+              fontWeight: 500,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase',
+              cursor: loading ? 'not-allowed' : 'pointer',
+              transition: 'background 0.15s ease',
+              marginTop: '8px',
+            }}
+            onMouseEnter={(e) => { if (!loading) e.currentTarget.style.background = '#1560e0' }}
+            onMouseLeave={(e) => { if (!loading) e.currentTarget.style.background = '#1A6FFF' }}
           >
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
 
-        <p className="font-body text-sm text-[#ECEAE5]/40 mt-8">
+        {/* Bottom link */}
+        <p style={{
+          fontFamily: inter.style.fontFamily,
+          fontSize: '14px',
+          color: 'rgba(236,234,229,0.45)',
+          marginTop: '32px',
+        }}>
           Don&apos;t have an account?{' '}
-          <Link href="/signup" className="text-[#1A6FFF] hover:text-[#5592FF] transition-colors">
+          <Link href="/signup" style={{ color: '#1A6FFF', textDecoration: 'none' }}>
             Create one
           </Link>
         </p>
       </div>
+
+      {/* DIVIDER */}
+      <div style={{
+        width: '1px',
+        background: 'rgba(255,255,255,0.07)',
+        flexShrink: 0,
+      }} className="auth-divider" />
+
+      {/* RIGHT PANEL */}
+      <div style={{
+        flex: 1,
+        minHeight: '100vh',
+        background: '#050505',
+        position: 'relative',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }} className="auth-right">
+
+        {/* Ambient glow */}
+        <div style={{
+          position: 'absolute',
+          width: '800px',
+          height: '800px',
+          borderRadius: '50%',
+          background: 'radial-gradient(circle, rgba(26,111,255,0.08) 0%, transparent 70%)',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          pointerEvents: 'none',
+        }} />
+
+        {/* Wordmark watermark */}
+        <span style={{
+          fontFamily: spaceGrotesk.style.fontFamily,
+          fontSize: '120px',
+          fontWeight: 700,
+          color: 'rgba(236,234,229,0.08)',
+          letterSpacing: '-0.03em',
+          userSelect: 'none',
+          lineHeight: 1,
+          position: 'relative',
+          zIndex: 1,
+        }}>
+          FORMA
+        </span>
+      </div>
+
+      {/* Responsive styles */}
+      <style>{`
+        @media (max-width: 767px) {
+          .auth-left {
+            width: 100% !important;
+            padding: 32px 24px !important;
+          }
+          .auth-divider {
+            display: none !important;
+          }
+          .auth-right {
+            display: none !important;
+          }
+          .auth-left h1 {
+            font-size: 32px !important;
+          }
+        }
+        input::placeholder {
+          color: rgba(236,234,229,0.2);
+        }
+      `}</style>
     </div>
   )
 }
