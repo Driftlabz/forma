@@ -33,11 +33,20 @@ async function runPipelineInBackground(
       .update({ status: newStatus })
       .eq('id', projectId)
   } catch (err) {
-    console.error('[Background pipeline error]', err)
-    await supabase
-      .from('projects')
-      .update({ status: 'failed' })
-      .eq('id', projectId)
+    const message = typeof err === 'object' && err !== null && 'error' in err
+      ? String((err as Record<string, unknown>).error)
+      : String(err)
+    console.error('[Background pipeline error]', message)
+
+    await Promise.all([
+      supabase.from('projects').update({ status: 'failed' }).eq('id', projectId),
+      supabase.from('build_logs').insert({
+        project_id: projectId,
+        step: 'pipeline',
+        status: 'failed',
+        error: message.slice(0, 1000),
+      }),
+    ])
   }
 }
 
@@ -107,7 +116,7 @@ export async function POST(
     // Fire and forget — do not await
     void runPipelineInBackground(params.id, sanitized)
 
-    return NextResponse.json({ message: 'Design pipeline started' }, { status: 202 })
+    return NextResponse.json({ message: 'Design pipeline started', projectId: params.id }, { status: 202 })
   } catch {
     return NextResponse.json({ error: 'Internal server error', code: 'SERVER_ERROR' }, { status: 500 })
   }

@@ -82,9 +82,11 @@ export default async function DashboardPage() {
         ) : (
           <div className="space-y-0 border border-[#1E1E1E]">
             {projectList.map((project) => (
-              <div
+              <Link
                 key={project.id}
+                href={`/projects/${project.id}`}
                 className="flex items-center justify-between px-6 py-4 border-b border-[#1E1E1E] last:border-b-0 hover:bg-[#0F0F0F] transition-colors"
+                style={{ textDecoration: 'none', display: 'flex' }}
               >
                 <div className="flex items-center gap-4">
                   <div>
@@ -97,7 +99,7 @@ export default async function DashboardPage() {
                 <span className={`font-body text-xs px-2.5 py-1 uppercase tracking-wider ${statusColors[project.status]}`}>
                   {project.status}
                 </span>
-              </div>
+              </Link>
             ))}
           </div>
         )}
