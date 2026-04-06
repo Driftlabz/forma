@@ -1,0 +1,661 @@
+{
+  "mode": "CINEMATIC",
+  "niche": "AI SaaS / Dev Tool",
+  "audience": "Technical founders building AI-native products",
+  "keyEmotion": "Trusted and confident",
+  "eliteMarkers": [
+    "Asymmetric layout anchor with terminal interface positioned left, content right",
+    "Depth layer stack with code syntax highlighting, ambient terminal glow, floating cards",
+    "Custom motion concept with live-typing terminal animations and staggered card reveals",
+    "Typography as visual element using code syntax highlighting for headers",
+    "Data visualization showing AI processing pipeline as interactive diagram"
+  ],
+  "slopPatterns": [
+    "Avoided centered hero with button",
+    "Avoided three equal feature cards",
+    "Avoided stock photo backgrounds",
+    "Avoided testimonial circles in row",
+    "Avoided generic pricing columns"
+  ],
+  "colorStyles": {
+    "background": "#050505",
+    "textPrimary": "#ECEAE5",
+    "accent": "#1A6FFF",
+    "surface": "rgba(255,255,255,0.04)",
+    "border": "rgba(255,255,255,0.07)",
+    "muted": "rgba(236,234,229,0.45)"
+  },
+  "pages": [
+    {
+      "name": "Landing",
+      "type": "designed",
+      "sections": [
+        {
+          "name": "Terminal Hero",
+          "layoutAxis": "Asymmetric split - terminal left 40%, content right 60%",
+          "layers": [
+            "Background terminal glow",
+            "Live terminal interface",
+            "Floating code snippets",
+            "Main content overlay"
+          ],
+          "colorStyles": [
+            "background",
+            "textPrimary",
+            "accent",
+            "surface"
+          ],
+          "textStyles": [
+            "Display H1 Space Grotesk 64px",
+            "Body Large Inter 18px",
+            "Code Mono 14px"
+          ],
+          "spacing": {
+            "paddingTop": "128px",
+            "paddingBottom": "160px",
+            "paddingX": "96px",
+            "gap": "48px"
+          },
+          "animation": {
+            "type": "Typing sequence with staggered reveals",
+            "duration": "3200ms",
+            "easing": "ease-out",
+            "stagger": "160ms"
+          },
+          "breakpoints": {
+            "desktop": "Split layout with terminal sidebar",
+            "tablet": "Stacked with compressed terminal",
+            "mobile": "Single column, terminal above, 44px touch targets"
+          },
+          "interactions": [
+            "Terminal typing animation on load",
+            "Hover states with cursor: pointer on interactive elements",
+            "Code syntax highlighting reveals"
+          ]
+        },
+        {
+          "name": "Pipeline Visualization",
+          "layoutAxis": "Full width diagram with data flow animation",
+          "layers": [
+            "Background grid texture",
+            "Data flow connections",
+            "Process nodes",
+            "Floating metrics"
+          ],
+          "colorStyles": [
+            "background",
+            "surface",
+            "accent",
+            "muted"
+          ],
+          "textStyles": [
+            "Display H2 Space Grotesk 48px",
+            "Body Inter 16px",
+            "Label 11px"
+          ],
+          "spacing": {
+            "paddingTop": "160px",
+            "paddingBottom": "160px",
+            "paddingX": "96px",
+            "gap": "64px"
+          },
+          "animation": {
+            "type": "Data flow with progressive reveals",
+            "duration": "2400ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Horizontal pipeline with side annotations",
+            "tablet": "Compressed pipeline with overlay details",
+            "mobile": "Vertical flow, 44px touch targets"
+          },
+          "interactions": [
+            "Node hover reveals with cursor: pointer",
+            "Data flow animation on scroll trigger",
+            "Progressive metric counters"
+          ]
+        },
+        {
+          "name": "Code Integration",
+          "layoutAxis": "Asymmetric code blocks with offset content",
+          "layers": [
+            "Terminal background",
+            "Code syntax highlighting",
+            "Integration badges",
+            "Performance metrics"
+          ],
+          "colorStyles": [
+            "surface",
+            "textPrimary",
+            "accent",
+            "border"
+          ],
+          "textStyles": [
+            "Display H3 Space Grotesk 32px",
+            "Code Mono 14px",
+            "Body Inter 16px"
+          ],
+          "spacing": {
+            "paddingTop": "128px",
+            "paddingBottom": "128px",
+            "paddingX": "96px",
+            "gap": "40px"
+          },
+          "animation": {
+            "type": "Code reveal with syntax highlighting",
+            "duration": "1600ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Side-by-side code and content",
+            "tablet": "Stacked with reduced code samples",
+            "mobile": "Single column, 44px touch targets"
+          },
+          "interactions": [
+            "Code block hover effects with cursor: pointer",
+            "Copy code functionality",
+            "Syntax highlighting animation"
+          ]
+        },
+        {
+          "name": "Social Proof Terminal",
+          "layoutAxis": "Terminal-style metrics with live updating",
+          "layers": [
+            "Terminal window chrome",
+            "Live metrics display",
+            "Company logo badges",
+            "Performance graphs"
+          ],
+          "colorStyles": [
+            "surface",
+            "accent",
+            "textPrimary",
+            "muted"
+          ],
+          "textStyles": [
+            "Code Mono 16px",
+            "Label 11px",
+            "Body Inter 16px"
+          ],
+          "spacing": {
+            "paddingTop": "96px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Counter animations with terminal styling",
+            "duration": "2000ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Three column terminal windows",
+            "tablet": "Two column compressed",
+            "mobile": "Single column stack, 44px touch targets"
+          },
+          "interactions": [
+            "Counter animations on scroll",
+            "Hover states with cursor: pointer on logos",
+            "Terminal cursor blinking"
+          ]
+        },
+        {
+          "name": "CTA Section",
+          "layoutAxis": "Centered with elevated surface treatment",
+          "layers": [
+            "Elevated surface background",
+            "Accent border glow",
+            "Call-to-action content",
+            "Secondary links"
+          ],
+          "colorStyles": [
+            "surface",
+            "accent",
+            "textPrimary",
+            "border"
+          ],
+          "textStyles": [
+            "Display H2 Space Grotesk 48px",
+            "Body Large Inter 18px",
+            "Label 11px"
+          ],
+          "spacing": {
+            "paddingTop": "96px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Glow pulse with content reveal",
+            "duration": "1200ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Centered content with side padding",
+            "tablet": "Full width with reduced padding",
+            "mobile": "Compressed vertical, 44px touch targets"
+          },
+          "interactions": [
+            "Button hover with cursor: pointer",
+            "Disabled states with cursor: not-allowed",
+            "Glow animation on focus"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Pricing",
+      "type": "designed",
+      "sections": [
+        {
+          "name": "Pricing Hero",
+          "layoutAxis": "Asymmetric header with code-style pricing display",
+          "layers": [
+            "Background texture",
+            "Header content",
+            "Code-style pricing syntax",
+            "Feature callouts"
+          ],
+          "colorStyles": [
+            "background",
+            "textPrimary",
+            "accent",
+            "surface"
+          ],
+          "textStyles": [
+            "Display H1 Space Grotesk 64px",
+            "Body Large Inter 18px",
+            "Code Mono 16px"
+          ],
+          "spacing": {
+            "paddingTop": "128px",
+            "paddingBottom": "80px",
+            "paddingX": "96px",
+            "gap": "48px"
+          },
+          "animation": {
+            "type": "Code syntax reveal with pricing highlights",
+            "duration": "2000ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Split layout with code display",
+            "tablet": "Stacked with compressed code",
+            "mobile": "Single column, 44px touch targets"
+          },
+          "interactions": [
+            "Syntax highlighting on load",
+            "Interactive code elements with cursor: pointer",
+            "Price calculation animations"
+          ]
+        },
+        {
+          "name": "Usage Calculator",
+          "layoutAxis": "Interactive terminal-style calculator interface",
+          "layers": [
+            "Terminal window chrome",
+            "Calculator interface",
+            "Real-time pricing updates",
+            "Usage visualization"
+          ],
+          "colorStyles": [
+            "surface",
+            "accent",
+            "textPrimary",
+            "border"
+          ],
+          "textStyles": [
+            "Code Mono 14px",
+            "Display H3 Space Grotesk 32px",
+            "Body Inter 16px"
+          ],
+          "spacing": {
+            "paddingTop": "80px",
+            "paddingBottom": "80px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Real-time calculation with terminal output",
+            "duration": "800ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Side-by-side calculator and results",
+            "tablet": "Stacked with compressed interface",
+            "mobile": "Full width single column, 44px touch targets"
+          },
+          "interactions": [
+            "Real-time slider updates with cursor: pointer",
+            "Terminal-style output animation",
+            "Hover states on controls"
+          ]
+        },
+        {
+          "name": "Enterprise Features",
+          "layoutAxis": "Asymmetric grid with technical specifications",
+          "layers": [
+            "Background grid pattern",
+            "Feature specification cards",
+            "Technical diagrams",
+            "Performance metrics"
+          ],
+          "colorStyles": [
+            "surface",
+            "textPrimary",
+            "accent",
+            "muted"
+          ],
+          "textStyles": [
+            "Display H2 Space Grotesk 48px",
+            "Body Inter 16px",
+            "Label 11px"
+          ],
+          "spacing": {
+            "paddingTop": "96px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Staggered card reveals with technical animations",
+            "duration": "1600ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Asymmetric three-column grid",
+            "tablet": "Two-column compressed",
+            "mobile": "Single column stack, 44px touch targets"
+          },
+          "interactions": [
+            "Card hover effects with cursor: pointer",
+            "Expandable technical details",
+            "Metric visualization on reveal"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "About",
+      "type": "designed",
+      "sections": [
+        {
+          "name": "Mission Statement",
+          "layoutAxis": "Asymmetric split with code philosophy display",
+          "layers": [
+            "Background code pattern",
+            "Mission content",
+            "Code philosophy syntax",
+            "Vision statements"
+          ],
+          "colorStyles": [
+            "background",
+            "textPrimary",
+            "accent",
+            "surface"
+          ],
+          "textStyles": [
+            "Display H1 Space Grotesk 64px",
+            "Body Large Inter 18px",
+            "Code Mono 14px"
+          ],
+          "spacing": {
+            "paddingTop": "128px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "48px"
+          },
+          "animation": {
+            "type": "Code philosophy reveal with mission highlights",
+            "duration": "2400ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "60/40 split with code display",
+            "tablet": "Stacked with compressed code",
+            "mobile": "Single column flow, 44px touch targets"
+          },
+          "interactions": [
+            "Philosophy code syntax highlighting",
+            "Interactive mission elements with cursor: pointer",
+            "Progressive value reveals"
+          ]
+        },
+        {
+          "name": "Team Git Log",
+          "layoutAxis": "Git commit history style team presentation",
+          "layers": [
+            "Git log interface",
+            "Team member commits",
+            "Contribution graphs",
+            "Technical backgrounds"
+          ],
+          "colorStyles": [
+            "surface",
+            "accent",
+            "textPrimary",
+            "border"
+          ],
+          "textStyles": [
+            "Code Mono 14px",
+            "Display H3 Space Grotesk 32px",
+            "Body Inter 16px"
+          ],
+          "spacing": {
+            "paddingTop": "96px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Git log scrolling with contributor reveals",
+            "duration": "2000ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Full git log interface with side details",
+            "tablet": "Compressed log with overlay details",
+            "mobile": "Vertical commit list, 44px touch targets"
+          },
+          "interactions": [
+            "Commit hover details with cursor: pointer",
+            "Contribution graph animations",
+            "Team member profile reveals"
+          ]
+        },
+        {
+          "name": "Technical Values",
+          "layoutAxis": "Code-documented principles with live examples",
+          "layers": [
+            "Documentation interface",
+            "Code examples",
+            "Value statements",
+            "Implementation previews"
+          ],
+          "colorStyles": [
+            "surface",
+            "textPrimary",
+            "accent",
+            "muted"
+          ],
+          "textStyles": [
+            "Display H2 Space Grotesk 48px",
+            "Code Mono 14px",
+            "Body Inter 16px"
+          ],
+          "spacing": {
+            "paddingTop": "80px",
+            "paddingBottom": "80px",
+            "paddingX": "96px",
+            "gap": "40px"
+          },
+          "animation": {
+            "type": "Documentation reveal with code examples",
+            "duration": "1800ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Documentation layout with code samples",
+            "tablet": "Stacked with compressed examples",
+            "mobile": "Single column with minimal code, 44px touch targets"
+          },
+          "interactions": [
+            "Code example interactions with cursor: pointer",
+            "Value principle expansions",
+            "Live code preview updates"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "type": "cms_template",
+      "sections": [
+        {
+          "name": "Article Header",
+          "layoutAxis": "Technical article header with metadata display",
+          "layers": [
+            "Background gradient",
+            "Article metadata",
+            "Author information",
+            "Technical tags"
+          ],
+          "colorStyles": [
+            "background",
+            "textPrimary",
+            "accent",
+            "muted"
+          ],
+          "textStyles": [
+            "Display H1 Space Grotesk 64px",
+            "Body Inter 16px",
+            "Label 11px"
+          ],
+          "spacing": {
+            "paddingTop": "96px",
+            "paddingBottom": "64px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Header reveal with metadata animation",
+            "duration": "1200ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Full width with side metadata",
+            "tablet": "Stacked with compressed metadata",
+            "mobile": "Single column layout, 44px touch targets"
+          },
+          "interactions": [
+            "Tag hover effects with cursor: pointer",
+            "Author profile reveals",
+            "Metadata display animations"
+          ]
+        },
+        {
+          "name": "Article Content",
+          "layoutAxis": "Technical documentation style content layout",
+          "layers": [
+            "Content background",
+            "Code block highlights",
+            "Technical diagrams",
+            "Interactive elements"
+          ],
+          "colorStyles": [
+            "background",
+            "textPrimary",
+            "surface",
+            "accent"
+          ],
+          "textStyles": [
+            "Body Large Inter 18px",
+            "Code Mono 14px",
+            "Display H3 Space Grotesk 32px"
+          ],
+          "spacing": {
+            "paddingTop": "32px",
+            "paddingBottom": "96px",
+            "paddingX": "96px",
+            "gap": "32px"
+          },
+          "animation": {
+            "type": "Progressive content reveal with code syntax",
+            "duration": "1000ms",
+            "easing": "ease-out",
+            "stagger": "80ms"
+          },
+          "breakpoints": {
+            "desktop": "Optimal reading width with side navigation",
+            "tablet": "Full width with compressed navigation",
+            "mobile": "Single column optimized, 44px touch targets"
+          },
+          "interactions": [
+            "Code block copy functionality with cursor: pointer",
+            "Interactive diagram elements",
+            "Progressive content loading"
+          ]
+        }
+      ]
+    }
+  ],
+  "cmsCollections": [
+    {
+      "name": "Blog Posts",
+      "fields": [
+        {
+          "name": "title",
+          "type": "text"
+        },
+        {
+          "name": "slug",
+          "type": "text"
+        },
+        {
+          "name": "excerpt",
+          "type": "text"
+        },
+        {
+          "name": "content",
+          "type": "formattedText"
+        },
+        {
+          "name": "author",
+          "type": "text"
+        },
+        {
+          "name": "publishDate",
+          "type": "date"
+        },
+        {
+          "name": "tags",
+          "type": "text"
+        },
+        {
+          "name": "featuredImage",
+          "type": "image"
+        },
+        {
+          "name": "readTime",
+          "type": "number"
+        },
+        {
+          "name": "published",
+          "type": "boolean"
+        }
+      ],
+      "templatePage": "Blog"
+    }
+  ]
+}

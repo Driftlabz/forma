@@ -33,6 +33,7 @@ export interface Intake {
   designed_pages: string[]
   cms_pages: string[]
   references: string[]
+  reference_images: string[]
   avoid: string
   created_at: string
 }

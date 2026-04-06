@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Dev Platform - Preview</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #050505;
+            --text-primary: #ECEAE5;
+            --accent: #1A6FFF;
+            --surface: rgba(255,255,255,0.04);
+            --border: rgba(255,255,255,0.07);
+            --muted: rgba(236,234,229,0.45);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            background-image: radial-gradient(rgba(255,255,255,0.06) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .page-label {
+            position: sticky;
+            top: 0;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 16px 96px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 600;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .terminal-window {
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 0 40px rgba(26, 111, 255, 0.15);
+        }
+
+        .terminal-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f57; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #28ca42; }
+
+        .terminal-content {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            min-height: 300px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(26, 111, 255, 0.02));
+        }
+
+        .code-line {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            opacity: 0;
+            animation: typeIn 0.8s ease-out forwards;
+        }
+
+        .code-line:nth-child(1) { animation-delay: 0.2s; }
+        .code-line:nth-child(2) { animation-delay: 0.6s; }
+        .code-line:nth-child(3) { animation-delay: 1.0s; }
+        .code-line:nth-child(4) { animation-delay: 1.4s; }
+
+        @keyframes typeIn {
+            to { opacity: 1; }
+        }
+
+        .prompt { color: var(--accent); }
+        .command { color: #28ca42; }
+        .string { color: #ffc107; }
+        .keyword { color: #ff6b9d; }
+        .comment { color: var(--muted); }
+
+        .cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1.2em;
+            background: var(--accent);
+            animation: blink 1s infinite;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .section {
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s ease-out;
+        }
+
+        .section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .hero-split {
+            display: grid;
+            grid-template-columns: 40% 60%;
+            gap: 48px;
+            padding: 128px 96px 160px;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .hero-terminal {
+            position: relative;
+        }
+
+        .hero-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-content .lead {
+            font-size: 18px;
+            color: var(--muted);
+            margin-bottom: 32px;
+            max-width: 480px;
+        }
+
+        .cta-button {
+            background: var(--accent);
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            background: #0052cc;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(26, 111, 255, 0.3);
+        }
+
+        .pipeline-section {
+            padding: 160px 96px;
+            text-align: center;
+        }
+
+        .pipeline-section h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 48px;
+            font-weight: 600;
+            margin-bottom: 64px;
+            background: linear-gradient(135deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .pipeline-diagram {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            margin: 80px 0;
+            flex-wrap: wrap;
+        }
+
+        .pipeline-node {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            width: 200px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .pipeline-node:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+            cursor: pointer;
+        }
+
+        .pipeline-arrow {
+            color: var(--accent);
+            font-size: 24px;
+        }
+
+        .code-integration {
+            padding: 128px 96px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .code-block {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        .code-content {
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .social-proof {
+            padding: 96px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .metric-terminal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .metric-terminal:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .metric-content {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-family: 'Courier New', monospace;
+            font-size: 32px;
+            font-weight: bold;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .cta-section {
+            padding: 96px;
+            text-align: center;
+        }
+
+        .cta-card {
+            background: var(--surface);
+            border: 1px solid var(--accent);
+            border-radius: 12px;
+            padding: 48px;
+            max-width: 600px;
+            margin: 0 auto;
+            box-shadow: 0 0 40px rgba(26, 111, 255, 0.1);
+        }
+
+        .pricing-hero {
+            padding: 128px 96px 80px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+        }
+
+        .pricing-content h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 64px;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 24px;
+        }
+
+        .pricing-code {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .calculator-section {
+            padding: 80px 96px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+        }
+
+        .calculator-terminal {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .slider-container {
+            margin: 20px 0;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider::-webkit-slider-thumb {
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: var(--accent);
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .enterprise-features {
+            padding: 96px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-2px);
+            cursor: pointer;
+        }
+
+        .mission-section {
+            padding: 128px 96px 96px;
+            display: grid;
+            grid-template-columns: 60% 40%;
+            gap: 48px;
+        }
+
+        .team-section {
+            padding: 96px;
+        }
+
+        .git-log {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+        }
+
+        .commit-line {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .commit-hash {
+            color: var(--accent);
+            margin-right: 12px;
+            font-weight: bold;
+        }
+
+        .commit-author {
+            color: var(--muted);
+            margin-right: 12px;
+            min-width: 100px;
+        }
+
+        .values-section {
+            padding: 80px 96px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 40px;
+        }
+
+        .value-item {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .blog-header {
+            padding: 96px 96px 64px;
+            text-align: center;
+        }
+
+        .blog-meta {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--muted);
+        }
+
+        .blog-content {
+            padding: 32px 96px 96px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .blog-content h2, .blog-content h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin: 32px 0 16px;
+        }
+
+        .blog-content p {
+            margin-bottom: 16px;
+            font-size: 18px;
+            line-height: 1.7;
+        }
+
+        .blog-content .code-block {
+            margin: 24px 0;
+        }
+
+        .cms-label {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: var(--accent);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 1001;
+        }
+
+        @media (max-width: 768px) {
+            .hero-split,
+            .code-integration,
+            .pricing-hero,
+            .calculator-section,
+            .mission-section {
+                grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .social-proof,
+            .enterprise-features {
+                grid-template-columns: 1fr;
+            }
+
+            .page-label,
+            .hero-split,
+            .pipeline-section,
+            .code-integration,
+            .social-proof,
+            .cta-section,
+            .pricing-hero,
+            .calculator-section,
+            .enterprise-features,
+            .mission-section,
+            .team-section,
+            .values-section,
+            .blog-header,
+            .blog-content {
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+
+            .hero-content h1,
+            .pricing-content h1 {
+                font-size: 40px;
+            }
+
+            .pipeline-section h2 {
+                font-size: 32px;
+            }
+
+            .values-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .blog-content {
+                padding: 32px 20px 96px;
+            }
+
+            .cta-button {
+                min-height: 44px;
+                min-width: 44px;
+            }
+
+            .metric-terminal,
+            .feature-card,
+            .value-item {
+                min-height: 44px;
+            }
+
+            button,
+            .slider {
+                min-height: 44px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <div class="page-label">Landing Page</div>
+    
+    <!-- Terminal Hero Section -->
+    <section class="section hero-split" id="hero">
+        <div class="hero-terminal">
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                </div>
+                <div class="terminal-content">
+                    <div class="code-line">
+                        <span class="prompt">$</span> 
+                        <span class="command">ai-platform</span> 
+                        <span class="keyword">--deploy</span> 
+                        <span class="string">"production"</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="comment">// Initializing AI infrastructure...</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="string">✓ Models deployed</span> 
+                        <span class="keyword">99.9%</span> 
+                        <span class="string">uptime</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="string">✓ API endpoints live</span> 
+                        <span class="keyword">&lt;50ms</span> 
+                        <span class="string">latency</span>
+                    </div>
+                    <div class="code-line">
+                        <span class="prompt">$</span><span class="cursor"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-content">
+            <h1>Ship AI Products That Scale</h1>
+            <p class="lead">The only platform technical founders need to build, deploy, and scale AI-native products. From prototype to production in minutes, not months.</p>
+            <a href="#" class="cta-button">Start Building →</a>
+        </div>
+    </section>
+
+    <!-- Pipeline Visualization -->
+    <section class="section pipeline-section" id="pipeline">
+        <h2>Your AI Pipeline, Optimized</h2>
+        <div class="pipeline-diagram">
+            <div class="pipeline-node">
+                <h3>Data Ingestion</h3>
+                <p>Real-time processing</p>
+                <div style="color: var(--accent); font-family: monospace; margin-top: 8px;">2.3TB/day</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node">
+                <h3>Model Training</h3>
+                <p>Auto-scaling compute</p>
+                <div style="color: var(--accent); font-family: monospace; margin-top: 8px;">GPU clusters</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node">
+                <h3>Deployment</h3>
+                <p>Edge optimization</p>
+                <div style="color: var(--accent); font-family: monospace; margin-top: 8px;">&lt;50ms latency</div>
+            </div>
+            <div class="pipeline-arrow">→</div>
+            <div class="pipeline-node">
+                <h3>Monitoring</h3>
+                <p>Real-time analytics</p>
+                <div style="color: var(--accent); font-family: monospace; margin-top: 8px;">99.9% uptime</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Integration -->
+    <section class="section code-integration" id="integration">
+        <div>
+            <h3 style="font-family: 'Space Grotesk', sans-serif; font-size: 32px; margin-bottom: 24px;">Integration in 3 Lines</h3>
+            <p style="color: var(--muted); margin-bottom: 32px;">Deploy your AI models with our battle-tested infrastructure. No DevOps required.</p>
+            <div class="code-block">
+                <div class="code-header">deploy.py</div>
+                <div class="code-content">
+<span class="keyword">from</span> ai_platform <span class="keyword">import</span> <span class="command">deploy</span><br>
+<span class="keyword">model</span> = <span class="string">"your-model.pkl"</span><br>
+<span class="command">deploy</span>(<span class="keyword">model</span>, <span class="string">endpoint</span>=<span class="string">"production"</span>)
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="code-block">
+                <div class="code-header">Response - 200 OK</div>
+                <div class="code-content">
+{<br>
+&nbsp;&nbsp;<span class="string">"status"</span>: <span class="string">"deployed"</span>,<br>
+&nbsp;&nbsp;<span class="string">"endpoint"</span>: <span class="string">"https://api.your-model.ai"</span>,<br>
+&nbsp;&nbsp;<span class="string">"latency"</span>: <span class="keyword">47</span>,<br>
+&nbsp;&nbsp;<span class="string">"uptime"</span>: <span class="string">"99.9%"</span><br>
+}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Proof -->
+    <section class="section social-proof" id="proof">
+        <div class="metric-terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">10M+</div>
+                <div class="metric-label">API Calls/Day</div>
+            </div>
+        </div>
+        <div class="metric-terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">500+</div>
+                <div class="metric-label">AI Teams</div>
+            </div>
+        </div>
+        <div class="metric-terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+            </div>
+            <div class="metric-content">
+                <div class="metric-value">47ms</div>
+                <div class="metric-label">Avg Response</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="section cta-section" id="cta">
+        <div class="cta-card">
+            <h2 style="font-family: 'Space Grotesk', sans-serif; font-size: 48px; margin-bottom: 24px;">Ready to Ship?</h2>
+            <p style="font-size: 18px; color: var(--muted); margin-bottom: 32px;">Join 500+ technical teams building the future with AI.</p>
+            <a href="#" class="cta-button">Start Your Free Trial</a>
+        </div>
+    </section>
+
+    <!-- Pricing Page -->
+    <div class="page-label">Pricing Page</div>
+    
+    <!-- Pricing Hero -->
+    <section class="section pricing-hero" id="pricing-hero">
+        <div class="pricing-content">
+            <h1>Simple, Usage-Based Pricing</h1>
+            <p class="lead">Pay for what you use. Scale automatically. No surprises.</p>
+        </div>
+        <div class="pricing-code">
+            <div style="margin-bottom: 16px; color: var(--muted);">// Pricing calculator</div>
+            <div><span class="keyword">const</span> <span class="command">cost</span> = <span class="string">apiCalls</span> * <span class="keyword">0.001</span>;</div>
+            <div><span class="keyword">if</span> (<span class="string">plan</span> === <span class="string">'enterprise'</span>) {</div>
+            <div>&nbsp;&nbsp;<span class="keyword">return</span> <span class="command">cost</span> * <span class="keyword">0.7</span>; <span class="comment">// 30% discount</span></div>
+            <div>}</div>
+        </div>
+    </section>
+
+    <!-- Usage Calculator -->
+    <section class="section calculator-section" id="calculator">
+        <div class="calculator-terminal">
+            <div class="terminal-header">
+                <div class="terminal-dot red"></div>
+                <div class="terminal-dot yellow"></div>
+                <div class="terminal-dot green"></div>
+                <span style="margin-left: 12px; font-size: 12px;">Usage Calculator</span>
+            </div>
+            <div style="padding: 24px;">
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-family: monospace;">API Calls/Month:</label>
+                    <div class="slider-container">
+                        <input type="range" min="0" max="10000000" value="1000000" class="slider" id="apiSlider">
+                        <div id="apiValue" style="color: var(--accent); font-family: monospace; margin-top: 8px;">1,000,000</div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 8px; font-family: monospace;">Model Complexity:</label>
+                    <div class="slider-container">
+                        <input type="range" min="1" max="5" value="3" class="slider" id="complexitySlider">
+                        <div id="complexityValue" style="color: var(--accent); font-family: monospace; margin-top: 8px;">Standard</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-dot red"></div>
+                    <div class="terminal-dot yellow"></div>
+                    <div class="terminal-dot green"></div>
+                    <span style="margin-left: 12px; font-size: 12px;">Monthly Estimate</span>
+                </div>
+                <div class="terminal-content">
+                    <div><span class="prompt">$</span> <span class="command">calculate-cost</span> <span class="string">--plan=standard</span></div>
+                    <div style="margin: 16px 0;">
+                        <div><span class="string">API Calls:</span> <span id="displayCalls">1,000,000</span></div>
+                        <div><span class="string">Rate:</span> <span class="keyword">$0.001</span><span class="string">/call</span></div>
+                        <div><span class="string">Complexity:</span> <span id="displayComplexity">1.5x</span></div>
+                    </div>
+                    <div style="border-top: 1px solid var(--border); padding-top: 16px; margin-top: 16px;">
+                        <div style="font-size: 18px;"><span class="string">Total:</span> <span style="color: var(--accent); font-weight: bold;" id="totalCost">$1,500</span><span class="string">/month</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Enterprise Features -->
+    <section class="section enterprise-features" id="enterprise">
+        <div class="feature-card">
+            <h3 style="color: var(--accent); margin-bottom: 16px;">Enterprise Security</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 4px 0;">✓ SOC 2 Type II</li>
+                <li style="padding: 4px 0;">✓ HIPAA Compliance</li>
+                <li style="padding: 4px 0;">✓ End-to-end Encryption</li>
+                <li style="padding: 4px 0;">✓ Private Cloud Options</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h3 style="color: var(--accent); margin-bottom: 16px;">Advanced Analytics</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 4px 0;">✓ Real-time Monitoring</li>
+                <li style="padding: 4px 0;">✓ Custom Dashboards</li>
+                <li style="padding: 4px 0;">✓ A/B Testing</li>
+                <li style="padding: 4px 0;">✓ Performance Insights</li>
+            </ul>
+        </div>
+        <div class="feature-card">
+            <h3 style="color: var(--accent); margin-bottom: 16px;">24/7 Support</h3>
+            <ul style="list-style: none; padding: 0;">
+                <li style="padding: 4px 0;">✓ Dedicated Account Manager</li>
+                <li
