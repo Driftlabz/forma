@@ -3,12 +3,11 @@
 import { useState, useRef, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import { Space_Grotesk, Inter } from 'next/font/google'
 import DesignModeSelector from '@/components/intake/DesignModeSelector'
 import { uploadReferenceImage } from '@/lib/storage'
 
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['600', '700'] })
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500'] })
+const headingFont = 'var(--font-space-grotesk), sans-serif'
+const bodyFont = 'var(--font-inter), sans-serif'
 
 type DesignMode = 'CINEMATIC' | 'EDITORIAL' | 'BRUTALIST'
 
@@ -62,7 +61,7 @@ interface IntakeFormState {
 
 const labelStyle: React.CSSProperties = {
   display: 'block',
-  fontFamily: inter.style.fontFamily,
+  fontFamily: bodyFont,
   fontSize: '11px',
   fontWeight: 500,
   letterSpacing: '0.10em',
@@ -78,7 +77,7 @@ const inputStyle: React.CSSProperties = {
   border: '1px solid rgba(255,255,255,0.08)',
   borderRadius: '0px',
   color: '#ECEAE5',
-  fontFamily: inter.style.fontFamily,
+  fontFamily: bodyFont,
   fontSize: '15px',
   padding: '0 16px',
   outline: 'none',
@@ -112,7 +111,7 @@ const sectionDivider: React.CSSProperties = {
 }
 
 const sectionHeadingStyle: React.CSSProperties = {
-  fontFamily: spaceGrotesk.style.fontFamily,
+  fontFamily: headingFont,
   fontSize: '24px',
   fontWeight: 600,
   color: '#ECEAE5',
@@ -121,7 +120,7 @@ const sectionHeadingStyle: React.CSSProperties = {
 }
 
 const sectionSubtextStyle: React.CSSProperties = {
-  fontFamily: inter.style.fontFamily,
+  fontFamily: bodyFont,
   fontSize: '15px',
   color: 'rgba(236,234,229,0.45)',
   margin: '0 0 32px 0',
@@ -160,7 +159,7 @@ export default function IntakePage() {
   const canSubmit =
     form.businessName.trim().length > 0 &&
     form.niche.length > 0 &&
-    (form.designedPages.length > 0 || form.cmsPages.length > 0) &&
+    form.designedPages.length > 0 &&
     !submitting
 
   function togglePage(list: 'designedPages' | 'cmsPages', page: string) {
@@ -254,14 +253,14 @@ export default function IntakePage() {
   }
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050505', fontFamily: inter.style.fontFamily }}>
+    <div style={{ minHeight: '100vh', background: '#050505', fontFamily: bodyFont }}>
       {/* Header */}
       <header style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'sticky', top: 0, background: 'rgba(5,5,5,0.95)', backdropFilter: 'blur(8px)', zIndex: 10 }}>
         <div>
-          <span style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', color: '#1A6FFF', textTransform: 'uppercase' as const }}>FORMA</span>
-          <span style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', color: 'rgba(236,234,229,0.3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em' }}> / Intake</span>
+          <span style={{ fontFamily: bodyFont, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', color: '#1A6FFF', textTransform: 'uppercase' as const }}>FORMA</span>
+          <span style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em' }}> / Intake</span>
         </div>
-        <Link href="/dashboard" style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.4)', textDecoration: 'none' }}
+        <Link href="/dashboard" style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.4)', textDecoration: 'none' }}
           onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#ECEAE5' }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(236,234,229,0.4)' }}
         >
@@ -271,10 +270,10 @@ export default function IntakePage() {
 
       {/* Page title */}
       <div style={{ maxWidth: '720px', margin: '0 auto', padding: '48px 24px 0' }}>
-        <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '40px', fontWeight: 700, letterSpacing: '-0.02em', color: '#ECEAE5', margin: '0 0 8px 0' }}>
+        <h1 style={{ fontFamily: headingFont, fontSize: '40px', fontWeight: 700, letterSpacing: '-0.02em', color: '#ECEAE5', margin: '0 0 8px 0' }}>
           Design Intake
         </h1>
-        <p style={{ fontFamily: inter.style.fontFamily, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: 0 }}>
+        <p style={{ fontFamily: bodyFont, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: 0 }}>
           Tell us about your project. The more context you give, the better your design will be.
         </p>
       </div>
@@ -310,7 +309,7 @@ export default function IntakePage() {
             <div style={{ marginBottom: '24px' }}>
               <label style={labelStyle}>Target Audience <span style={{ color: '#DC2626' }}>*</span></label>
               <textarea value={form.audience} onChange={(e) => setForm((p) => ({ ...p, audience: e.target.value }))} maxLength={300} placeholder="Who are your ideal customers? e.g. Technical founders building AI products" style={textareaStyle} onFocus={focusInput} onBlur={blurInput} />
-              <div style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', color: 'rgba(236,234,229,0.25)', marginTop: '4px', textAlign: 'right' as const }}>{form.audience.length}/300</div>
+              <div style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.25)', marginTop: '4px', textAlign: 'right' as const }}>{form.audience.length}/300</div>
             </div>
 
             <div style={{ marginBottom: '24px' }}>
@@ -336,12 +335,12 @@ export default function IntakePage() {
                     label={page}
                     checked={form.designedPages.includes(page)}
                     onChange={() => togglePage('designedPages', page)}
-                    inter={inter}
+
                   />
                 ))}
               </div>
               {tooManyPages && (
-                <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: '#CA8A04', marginTop: '12px' }}>
+                <p style={{ fontFamily: bodyFont, fontSize: '13px', color: '#CA8A04', marginTop: '12px' }}>
                   Maximum 5 designed pages. We&apos;ll prioritize the most important ones.
                 </p>
               )}
@@ -356,7 +355,7 @@ export default function IntakePage() {
                     label={page}
                     checked={form.cmsPages.includes(page)}
                     onChange={() => togglePage('cmsPages', page)}
-                    inter={inter}
+
                   />
                 ))}
               </div>
@@ -381,7 +380,7 @@ export default function IntakePage() {
             <div style={{ marginBottom: '24px' }}>
               <label style={labelStyle}>Avoid</label>
               <textarea value={form.avoid} onChange={(e) => setForm((p) => ({ ...p, avoid: e.target.value }))} maxLength={500} placeholder="e.g. No rounded corners, no stock photos, nothing that looks like a Webflow template" style={textareaStyle} onFocus={focusInput} onBlur={blurInput} />
-              <div style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', color: 'rgba(236,234,229,0.25)', marginTop: '4px', textAlign: 'right' as const }}>{form.avoid.length}/500</div>
+              <div style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.25)', marginTop: '4px', textAlign: 'right' as const }}>{form.avoid.length}/500</div>
             </div>
           </div>
 
@@ -393,7 +392,7 @@ export default function IntakePage() {
             {/* Reference URLs */}
             <div style={{ marginBottom: '32px' }}>
               <label style={labelStyle}>Sites You Admire</label>
-              <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.3)', marginBottom: '12px', marginTop: '-4px' }}>
+              <p style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.3)', marginBottom: '12px', marginTop: '-4px' }}>
                 We&apos;ll analyze these for design signals — not copy them
               </p>
               <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '12px' }}>
@@ -419,7 +418,7 @@ export default function IntakePage() {
             {/* Reference Images */}
             <div>
               <label style={labelStyle}>Mood Board / Brand Assets</label>
-              <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.3)', marginBottom: '12px', marginTop: '-4px' }}>
+              <p style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.3)', marginBottom: '12px', marginTop: '-4px' }}>
                 Screenshots, inspiration images, your logo — upload up to 4
               </p>
 
@@ -454,13 +453,13 @@ export default function IntakePage() {
                     onChange={(e) => { if (e.target.files) void handleFiles(e.target.files) }}
                   />
                   {uploading ? (
-                    <p style={{ fontFamily: inter.style.fontFamily, fontSize: '14px', color: 'rgba(236,234,229,0.45)' }}>Uploading...</p>
+                    <p style={{ fontFamily: bodyFont, fontSize: '14px', color: 'rgba(236,234,229,0.45)' }}>Uploading...</p>
                   ) : (
                     <>
-                      <p style={{ fontFamily: inter.style.fontFamily, fontSize: '14px', color: 'rgba(236,234,229,0.45)', margin: '0 0 4px 0' }}>
+                      <p style={{ fontFamily: bodyFont, fontSize: '14px', color: 'rgba(236,234,229,0.45)', margin: '0 0 4px 0' }}>
                         Drag & drop or click to upload
                       </p>
-                      <p style={{ fontFamily: inter.style.fontFamily, fontSize: '12px', color: 'rgba(236,234,229,0.25)', margin: 0 }}>
+                      <p style={{ fontFamily: bodyFont, fontSize: '12px', color: 'rgba(236,234,229,0.25)', margin: 0 }}>
                         PNG, JPG, WEBP · Max 5MB each · {4 - form.refImages.length} remaining
                       </p>
                     </>
@@ -469,7 +468,7 @@ export default function IntakePage() {
               )}
 
               {uploadError && (
-                <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: '#DC2626', marginBottom: '12px' }}>
+                <p style={{ fontFamily: bodyFont, fontSize: '13px', color: '#DC2626', marginBottom: '12px' }}>
                   {uploadError}
                 </p>
               )}
@@ -497,7 +496,7 @@ export default function IntakePage() {
 
           {/* Submit error */}
           {submitError && (
-            <p style={{ fontFamily: inter.style.fontFamily, fontSize: '14px', color: '#DC2626', marginTop: '32px' }}>
+            <p style={{ fontFamily: bodyFont, fontSize: '14px', color: '#DC2626', marginTop: '32px' }}>
               {submitError}
             </p>
           )}
@@ -516,7 +515,7 @@ export default function IntakePage() {
                 border: 'none',
                 borderRadius: '0px',
                 color: '#ffffff',
-                fontFamily: inter.style.fontFamily,
+                fontFamily: bodyFont,
                 fontSize: '14px',
                 fontWeight: 500,
                 letterSpacing: '0.08em',
@@ -542,16 +541,17 @@ export default function IntakePage() {
   )
 }
 
-function CheckboxRow({ label, checked, onChange, inter }: {
+function CheckboxRow({ label, checked, onChange }: {
   label: string
   checked: boolean
   onChange: () => void
-  inter: { style: { fontFamily: string } }
 }) {
   return (
-    <label style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+    <label
+      onClick={onChange}
+      style={{ display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}
+    >
       <div
-        onClick={onChange}
         style={{
           width: '18px',
           height: '18px',
@@ -563,7 +563,6 @@ function CheckboxRow({ label, checked, onChange, inter }: {
           alignItems: 'center',
           justifyContent: 'center',
           transition: 'background 150ms ease, border-color 150ms ease',
-          cursor: 'pointer',
         }}
       >
         {checked && (
@@ -572,7 +571,7 @@ function CheckboxRow({ label, checked, onChange, inter }: {
           </svg>
         )}
       </div>
-      <span style={{ fontFamily: inter.style.fontFamily, fontSize: '15px', color: checked ? '#ECEAE5' : 'rgba(236,234,229,0.6)', transition: 'color 150ms ease' }}>
+      <span style={{ fontFamily: bodyFont, fontSize: '15px', color: checked ? '#ECEAE5' : 'rgba(236,234,229,0.6)', transition: 'color 150ms ease' }}>
         {label}
       </span>
     </label>

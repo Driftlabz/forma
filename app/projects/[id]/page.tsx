@@ -3,12 +3,11 @@
 import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { Space_Grotesk, Inter } from 'next/font/google'
 import { createClient } from '@/lib/supabase/client'
 import type { ProjectStatus } from '@/lib/types'
 
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], weight: ['600', '700'] })
-const inter = Inter({ subsets: ['latin'], weight: ['400', '500'] })
+const headingFont = 'var(--font-space-grotesk), sans-serif'
+const bodyFont = 'var(--font-inter), sans-serif'
 
 interface SpecSummary {
   mode: string
@@ -171,17 +170,17 @@ export default function ProjectPage() {
   const currentStep = STATUS_STEP_MAP[status] ?? 0
 
   return (
-    <div style={{ minHeight: '100vh', background: '#050505', fontFamily: inter.style.fontFamily }}>
+    <div style={{ minHeight: '100vh', background: '#050505', fontFamily: bodyFont }}>
       {/* Dot grid */}
       <div style={{ position: 'fixed', inset: 0, zIndex: 0, backgroundImage: 'radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px', pointerEvents: 'none' }} />
 
       {/* Header */}
       <header style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '16px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 1 }}>
         <div>
-          <span style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', color: '#1A6FFF', textTransform: 'uppercase' as const }}>FORMA</span>
-          <span style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', color: 'rgba(236,234,229,0.3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em' }}> / {project?.name ?? 'Project'}</span>
+          <span style={{ fontFamily: bodyFont, fontSize: '11px', fontWeight: 500, letterSpacing: '0.12em', color: '#1A6FFF', textTransform: 'uppercase' as const }}>FORMA</span>
+          <span style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.3)', textTransform: 'uppercase' as const, letterSpacing: '0.12em' }}> / {project?.name ?? 'Project'}</span>
         </div>
-        <Link href="/dashboard" style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.4)', textDecoration: 'none' }}
+        <Link href="/dashboard" style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.4)', textDecoration: 'none' }}
           onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = '#ECEAE5' }}
           onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = 'rgba(236,234,229,0.4)' }}
         >
@@ -194,15 +193,15 @@ export default function ProjectPage() {
         {/* STATE: intake */}
         {status === 'intake' && (
           <div>
-            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
               {project?.name}
             </h1>
-            <p style={{ fontFamily: inter.style.fontFamily, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 40px 0' }}>
+            <p style={{ fontFamily: bodyFont, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 40px 0' }}>
               Your project is ready. Complete the intake form to start your design.
             </p>
             <Link
               href={`/projects/${projectId}/intake`}
-              style={{ display: 'inline-block', background: '#1A6FFF', color: '#fff', fontFamily: inter.style.fontFamily, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, textDecoration: 'none', padding: '14px 32px', borderRadius: '0px', transition: 'background 200ms ease' }}
+              style={{ display: 'inline-block', background: '#1A6FFF', color: '#fff', fontFamily: bodyFont, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, textDecoration: 'none', padding: '14px 32px', borderRadius: '0px', transition: 'background 200ms ease' }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#1560E0' }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#1A6FFF' }}
             >
@@ -214,10 +213,10 @@ export default function ProjectPage() {
         {/* STATE: designing */}
         {status === 'designing' && (
           <div>
-            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 8px 0' }}>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 8px 0' }}>
               Building your design
             </h1>
-            <p style={{ fontFamily: inter.style.fontFamily, fontSize: '15px', color: 'rgba(236,234,229,0.45)', margin: '0 0 48px 0' }}>
+            <p style={{ fontFamily: bodyFont, fontSize: '15px', color: 'rgba(236,234,229,0.45)', margin: '0 0 48px 0' }}>
               The AI pipeline is running. This takes 2–4 minutes.
             </p>
 
@@ -231,7 +230,7 @@ export default function ProjectPage() {
                   <div key={step.key} style={{ display: 'flex', alignItems: 'center', gap: '16px', opacity: isPending ? 0.4 : 1, transition: 'opacity 400ms ease' }}>
                     {isComplete ? <CheckIcon /> : isCurrent ? <SpinnerIcon /> : <PendingIcon />}
                     <span style={{
-                      fontFamily: inter.style.fontFamily,
+                      fontFamily: bodyFont,
                       fontSize: '16px',
                       color: isComplete ? '#16A34A' : isCurrent ? '#ECEAE5' : 'rgba(236,234,229,0.45)',
                       transition: 'color 400ms ease',
@@ -243,7 +242,7 @@ export default function ProjectPage() {
               })}
             </div>
 
-            <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.25)', marginTop: '40px' }}>
+            <p style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.25)', marginTop: '40px' }}>
               Page will update automatically when your design is ready.
             </p>
           </div>
@@ -254,25 +253,25 @@ export default function ProjectPage() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               <CheckIcon />
-              <span style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: '#16A34A', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Design complete</span>
+              <span style={{ fontFamily: bodyFont, fontSize: '13px', color: '#16A34A', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Design complete</span>
             </div>
-            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
               Your design is ready
             </h1>
-            <p style={{ fontFamily: inter.style.fontFamily, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 40px 0' }}>
+            <p style={{ fontFamily: bodyFont, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 40px 0' }}>
               Review your design spec and preview before we build.
             </p>
 
             {spec && (
               <div style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', padding: '24px', marginBottom: '32px' }}>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '24px' }}>
-                  <SpecStat label="Mode" value={spec.mode} inter={inter} />
-                  <SpecStat label="Pages" value={String(spec.pages)} inter={inter} />
-                  <SpecStat label="Elite Markers" value={String(spec.eliteMarkers)} inter={inter} />
+                  <SpecStat label="Mode" value={spec.mode} />
+                  <SpecStat label="Pages" value={String(spec.pages)} />
+                  <SpecStat label="Elite Markers" value={String(spec.eliteMarkers)} />
                 </div>
                 {spec.qaResult && (
                   <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid rgba(255,255,255,0.06)' }}>
-                    <span style={{ fontFamily: inter.style.fontFamily, fontSize: '12px', color: spec.qaResult.overall === 'pass' ? '#16A34A' : '#CA8A04', letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>
+                    <span style={{ fontFamily: bodyFont, fontSize: '12px', color: spec.qaResult.overall === 'pass' ? '#16A34A' : '#CA8A04', letterSpacing: '0.08em', textTransform: 'uppercase' as const }}>
                       QA: {spec.qaResult.overall}
                     </span>
                   </div>
@@ -282,7 +281,7 @@ export default function ProjectPage() {
 
             <Link
               href={`/projects/${projectId}/preview`}
-              style={{ display: 'inline-block', background: '#1A6FFF', color: '#fff', fontFamily: inter.style.fontFamily, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, textDecoration: 'none', padding: '14px 32px', borderRadius: '0px', transition: 'background 200ms ease' }}
+              style={{ display: 'inline-block', background: '#1A6FFF', color: '#fff', fontFamily: bodyFont, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, textDecoration: 'none', padding: '14px 32px', borderRadius: '0px', transition: 'background 200ms ease' }}
               onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#1560E0' }}
               onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.background = '#1A6FFF' }}
             >
@@ -296,11 +295,11 @@ export default function ProjectPage() {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
               {status === 'complete' ? <CheckIcon /> : <SpinnerIcon />}
-              <span style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: status === 'complete' ? '#16A34A' : '#1A6FFF', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
+              <span style={{ fontFamily: bodyFont, fontSize: '13px', color: status === 'complete' ? '#16A34A' : '#1A6FFF', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>
                 {status === 'complete' ? 'Build complete' : 'Building in Framer...'}
               </span>
             </div>
-            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
               {status === 'complete' ? 'Your site is live' : 'Building your site'}
             </h1>
           </div>
@@ -314,25 +313,25 @@ export default function ProjectPage() {
                 <circle cx="8" cy="8" r="6" fill="rgba(220,38,38,0.15)" stroke="#DC2626" strokeWidth="1.5" />
                 <path d="M5.5 5.5l5 5M10.5 5.5l-5 5" stroke="#DC2626" strokeWidth="1.5" strokeLinecap="round" />
               </svg>
-              <span style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: '#DC2626', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Pipeline failed</span>
+              <span style={{ fontFamily: bodyFont, fontSize: '13px', color: '#DC2626', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Pipeline failed</span>
             </div>
-            <h1 style={{ fontFamily: spaceGrotesk.style.fontFamily, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
               Something went wrong
             </h1>
             {errorMsg && (
-              <p style={{ fontFamily: inter.style.fontFamily, fontSize: '13px', color: 'rgba(236,234,229,0.35)', margin: '0 0 32px 0', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', padding: '12px 16px', wordBreak: 'break-word' as const }}>
+              <p style={{ fontFamily: bodyFont, fontSize: '13px', color: 'rgba(236,234,229,0.35)', margin: '0 0 32px 0', background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.07)', padding: '12px 16px', wordBreak: 'break-word' as const }}>
                 {errorMsg}
               </p>
             )}
             {!errorMsg && (
-              <p style={{ fontFamily: inter.style.fontFamily, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 32px 0' }}>
+              <p style={{ fontFamily: bodyFont, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 32px 0' }}>
                 The design pipeline encountered an error. Try again — it usually works on the second attempt.
               </p>
             )}
             <button
               onClick={() => void handleReset()}
               disabled={resetting}
-              style={{ background: '#1A6FFF', border: 'none', borderRadius: '0px', color: '#fff', fontFamily: inter.style.fontFamily, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, padding: '14px 32px', cursor: resetting ? 'not-allowed' : 'pointer', opacity: resetting ? 0.5 : 1, transition: 'background 200ms ease' }}
+              style={{ background: '#1A6FFF', border: 'none', borderRadius: '0px', color: '#fff', fontFamily: bodyFont, fontSize: '13px', fontWeight: 500, letterSpacing: '0.08em', textTransform: 'uppercase' as const, padding: '14px 32px', cursor: resetting ? 'not-allowed' : 'pointer', opacity: resetting ? 0.5 : 1, transition: 'background 200ms ease' }}
               onMouseEnter={(e) => { if (!resetting) e.currentTarget.style.background = '#1560E0' }}
               onMouseLeave={(e) => { e.currentTarget.style.background = '#1A6FFF' }}
             >
@@ -352,11 +351,11 @@ export default function ProjectPage() {
   )
 }
 
-function SpecStat({ label, value, inter }: { label: string; value: string; inter: { style: { fontFamily: string } } }) {
+function SpecStat({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div style={{ fontFamily: inter.style.fontFamily, fontSize: '11px', color: 'rgba(236,234,229,0.35)', letterSpacing: '0.10em', textTransform: 'uppercase' as const, marginBottom: '6px' }}>{label}</div>
-      <div style={{ fontFamily: inter.style.fontFamily, fontSize: '20px', fontWeight: 500, color: '#ECEAE5' }}>{value}</div>
+      <div style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.35)', letterSpacing: '0.10em', textTransform: 'uppercase' as const, marginBottom: '6px' }}>{label}</div>
+      <div style={{ fontFamily: bodyFont, fontSize: '20px', fontWeight: 500, color: '#ECEAE5' }}>{value}</div>
     </div>
   )
 }
