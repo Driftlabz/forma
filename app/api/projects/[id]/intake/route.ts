@@ -96,7 +96,7 @@ export async function POST(
       key_emotion: sanitized.key_emotion ?? sanitized.keyEmotion ?? '',
       designed_pages: sanitized.designed_pages ?? sanitized.designedPages ?? [],
       cms_pages: sanitized.cms_pages ?? sanitized.cmsPages ?? [],
-      references: sanitized.refUrls ?? sanitized.references ?? [],
+      ref_urls: sanitized.refUrls ?? sanitized.ref_urls ?? [],
       reference_images: sanitized.refImages ?? sanitized.reference_images ?? [],
       avoid: sanitized.avoid ?? '',
     }

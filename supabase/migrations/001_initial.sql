@@ -27,7 +27,7 @@ CREATE TABLE intakes (
   key_emotion     text,
   designed_pages  text[] DEFAULT '{}',
   cms_pages       text[] DEFAULT '{}',
-  references      text[] DEFAULT '{}',
+  ref_urls        text[] DEFAULT '{}',
   avoid           text,
   created_at      timestamptz NOT NULL DEFAULT now()
 );

@@ -70,8 +70,8 @@ export function sanitizeIntake(raw: Record<string, unknown>): Record<string, unk
     ? (raw.refUrls as unknown[]).map((u) => sanitizeUrl(String(u))).filter(Boolean)
     : []
 
-  sanitized.references = Array.isArray(raw.references)
-    ? (raw.references as unknown[]).map((u) => sanitizeUrl(String(u))).filter(Boolean)
+  sanitized.ref_urls = Array.isArray(raw.ref_urls)
+    ? (raw.ref_urls as unknown[]).map((u) => sanitizeUrl(String(u))).filter(Boolean)
     : []
 
   sanitized.refImages = Array.isArray(raw.refImages)

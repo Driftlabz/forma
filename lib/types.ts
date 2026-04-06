@@ -32,7 +32,7 @@ export interface Intake {
   key_emotion: KeyEmotion
   designed_pages: string[]
   cms_pages: string[]
-  references: string[]
+  ref_urls: string[]
   reference_images: string[]
   avoid: string
   created_at: string
