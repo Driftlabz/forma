@@ -26,8 +26,8 @@ async function runPipelineInBackground(
 
     await supabase.from('specs').insert(specPayload)
 
-    // Update project status
-    const newStatus = result.passed ? 'preview' : 'failed'
+    // Update project status — show preview if HTML was generated, even if QA failed
+    const newStatus = result.previewHtml ? 'preview' : 'failed'
     await supabase
       .from('projects')
       .update({ status: newStatus })

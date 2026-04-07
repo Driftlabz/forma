@@ -17,7 +17,13 @@ Colors (non-negotiable):
 - Surface: rgba(255,255,255,0.04)
 - Border: rgba(255,255,255,0.07)
 - Muted: rgba(236,234,229,0.45)
-- Success: #16A34A | Error: #DC2626 | Warning: #CA8A04
+
+FORBIDDEN COLORS — never use these under any circumstances:
+- #16A34A and ALL green shades (no green, ever)
+- Any color not derived from the permitted palette above
+- No gradients introducing new hues
+- No teal, no cyan, no purple, no orange as UI colors
+The only permitted non-rgba colors in any spec output are: #050505, #ECEAE5, #1A6FFF, #DC2626, #CA8A04
 
 Typography:
 - Display (H1/H2/H3): Space Grotesk
