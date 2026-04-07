@@ -1,54 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { sanitizeIntake } from '@/lib/utils'
-import { runDesignPipeline } from '@/lib/agents/orchestrator'
-
-async function runPipelineInBackground(
-  projectId: string,
-  sanitizedIntake: Record<string, unknown>
-): Promise<void> {
-  const supabaseModule = await import('@/lib/supabase/server')
-  const supabase = supabaseModule.createClient()
-
-  try {
-    const result = await runDesignPipeline(sanitizedIntake)
-
-    // Save spec to database
-    const specPayload = {
-      project_id: projectId,
-      version: 1,
-      mode: String(result.spec.mode ?? 'CINEMATIC'),
-      design_spec: result.spec,
-      preview_html: result.previewHtml || null,
-      qa_result: result.qaResult,
-      approved: false,
-    }
-
-    await supabase.from('specs').insert(specPayload)
-
-    // Update project status — show preview if HTML was generated, even if QA failed
-    const newStatus = result.previewHtml ? 'preview' : 'failed'
-    await supabase
-      .from('projects')
-      .update({ status: newStatus })
-      .eq('id', projectId)
-  } catch (err) {
-    const message = typeof err === 'object' && err !== null && 'error' in err
-      ? String((err as Record<string, unknown>).error)
-      : String(err)
-    console.error('[Background pipeline error]', message)
-
-    await Promise.all([
-      supabase.from('projects').update({ status: 'failed' }).eq('id', projectId),
-      supabase.from('build_logs').insert({
-        project_id: projectId,
-        step: 'pipeline',
-        status: 'failed',
-        error: message.slice(0, 1000),
-      }),
-    ])
-  }
-}
+import { runPipelineInBackground } from '@/lib/pipeline'
 
 export async function POST(
   request: NextRequest,

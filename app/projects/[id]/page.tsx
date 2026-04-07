@@ -152,10 +152,18 @@ export default function ProjectPage() {
 
   async function handleReset() {
     setResetting(true)
-    const supabase = createClient()
-    await supabase.from('projects').update({ status: 'intake' }).eq('id', projectId)
-    setStatus('intake')
-    setErrorMsg(null)
+    try {
+      const res = await fetch(`/api/projects/${projectId}/retry`, { method: 'POST' })
+      if (res.ok) {
+        setStatus('designing')
+        setErrorMsg(null)
+      } else {
+        const data = await res.json() as { error?: string }
+        setErrorMsg(data.error ?? 'Failed to restart pipeline.')
+      }
+    } catch {
+      setErrorMsg('Failed to restart pipeline.')
+    }
     setResetting(false)
   }
 
