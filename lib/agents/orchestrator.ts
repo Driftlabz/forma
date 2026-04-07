@@ -68,8 +68,18 @@ export async function runDesignPipeline(
           ? (qaResult.failures as string[])
           : []
         console.log(`[Pipeline] QA failed. Re-running Design Agent with ${failures.length} failure notes...`)
-        spec = await runDesignAgent(intake, failures)
-        console.log('[Pipeline] Design Agent revision complete.')
+        try {
+          const revisedSpec = await runDesignAgent(intake, failures)
+          spec = revisedSpec
+          console.log('[Pipeline] Design Agent revision complete.')
+        } catch (revisionErr) {
+          const revMsg = typeof revisionErr === 'object' && revisionErr !== null && 'error' in revisionErr
+            ? String((revisionErr as Record<string, unknown>).error)
+            : String(revisionErr)
+          console.warn('[Pipeline] Design Agent revision produced malformed JSON — keeping previous spec:', revMsg)
+          errors.push(`REVISION_SKIPPED: ${revMsg}`)
+          // Do not re-throw — outer loop continues to next attempt with previous valid spec
+        }
       } else {
         console.warn('[Pipeline] QA failed after max attempts. Continuing with failed spec.')
         errors.push(`QA: Failed after ${MAX_QA_LOOPS} attempts. Failures: ${JSON.stringify(qaResult.failures)}`)

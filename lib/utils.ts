@@ -8,6 +8,38 @@ export function extractJSON(raw: string): string {
   return raw.trim()
 }
 
+/**
+ * Parse JSON from a model response with multi-step recovery for malformed output.
+ *
+ * Recovery order:
+ *   1. Standard: strip code fences, then JSON.parse
+ *   2. Boundary search: find first '{' and last '}', try JSON.parse on that slice
+ *   3. Walk backwards through '}' chars to find the longest valid prefix
+ *
+ * Throws if all three steps fail.
+ */
+export function repairJSON(raw: string): unknown {
+  // Step 1: normal path
+  try {
+    return JSON.parse(extractJSON(raw))
+  } catch {}
+
+  // Step 2 & 3: locate outermost object boundary, walk backwards on failure
+  const start = raw.indexOf('{')
+  if (start !== -1) {
+    let end = raw.lastIndexOf('}')
+    while (end > start) {
+      try {
+        return JSON.parse(raw.slice(start, end + 1))
+      } catch {
+        end = raw.lastIndexOf('}', end - 1)
+      }
+    }
+  }
+
+  throw new Error('JSON repair failed: could not extract valid JSON from model response')
+}
+
 const INJECTION_PATTERNS = [
   /ignore\s+previous\s+instructions/gi,
   /you\s+are\s+now/gi,

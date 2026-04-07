@@ -1,6 +1,6 @@
 import { callClaude } from '../claude'
 import { DESIGN_SYSTEM_PROMPT } from '../prompts/design'
-import { extractJSON } from '../utils'
+import { repairJSON } from '../utils'
 
 const REQUIRED_SPEC_FIELDS = ['mode', 'niche', 'audience', 'keyEmotion', 'eliteMarkers', 'slopPatterns', 'colorStyles', 'pages', 'cmsCollections']
 
@@ -23,7 +23,7 @@ export async function runDesignAgent(
       timeoutMs: 120000,
     })
 
-    const parsed: unknown = JSON.parse(extractJSON(raw))
+    const parsed: unknown = repairJSON(raw)
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
       throw new Error('Invalid design spec response shape')
     }
