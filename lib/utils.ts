@@ -19,19 +19,17 @@ export function extractJSON(raw: string): string {
  * Throws if all three steps fail.
  */
 export function repairJSON(raw: string): unknown {
-  // Step 1: normal path
-  try {
-    return JSON.parse(extractJSON(raw))
-  } catch {}
+  // Step 1: normal path — strip code fences, then parse
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  try { return JSON.parse(extractJSON(raw)) } catch (_e) { /* fallthrough */ }
 
   // Step 2 & 3: locate outermost object boundary, walk backwards on failure
   const start = raw.indexOf('{')
   if (start !== -1) {
     let end = raw.lastIndexOf('}')
     while (end > start) {
-      try {
-        return JSON.parse(raw.slice(start, end + 1))
-      } catch {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      try { return JSON.parse(raw.slice(start, end + 1)) } catch (_e) {
         end = raw.lastIndexOf('}', end - 1)
       }
     }
