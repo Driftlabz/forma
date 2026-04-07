@@ -1,10 +1,28 @@
 import Anthropic from '@anthropic-ai/sdk'
+import { readFileSync } from 'fs'
+import { join } from 'path'
 
 let _client: Anthropic | null = null
 
+function resolveApiKey(): string | undefined {
+  // Use env var if non-empty
+  if (process.env.ANTHROPIC_API_KEY) return process.env.ANTHROPIC_API_KEY
+
+  // Fallback: read .env.local directly.
+  // On Windows, ANTHROPIC_API_KEY='' in system env causes Next.js/.env.local to be skipped.
+  // Reading the file directly bypasses that.
+  try {
+    const content = readFileSync(join(process.cwd(), '.env.local'), 'utf-8')
+    const match = content.match(/^ANTHROPIC_API_KEY=(.+)$/m)
+    return match?.[1]?.trim()
+  } catch {
+    return undefined
+  }
+}
+
 function getClient(): Anthropic {
   if (!_client) {
-    _client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
+    _client = new Anthropic({ apiKey: resolveApiKey() })
   }
   return _client
 }
