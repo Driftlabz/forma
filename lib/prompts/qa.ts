@@ -12,6 +12,7 @@ You use Haiku model — be fast and decisive.
    - Allowed: 8|16|24|32|40|48|64|80|96|128|160|192
    - 4px only for micro-density contexts
    - Section padding minimum 80px vertical desktop
+   - Note: 24px IS divisible by 8 — do not flag gap: 24px as a violation
    FAIL IF: any value like 10px, 12px, 15px, 20px, 30px
 
 2. BORDER & RADIUS

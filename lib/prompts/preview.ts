@@ -5,7 +5,7 @@ HTML mockup the user can view and approve.
 
 RULES:
 - Generate complete self-contained HTML with embedded CSS
-- Import Space Grotesk and Inter from Google Fonts
+- Load Space Grotesk and Inter using @import inside a style tag in the head, not link tags. Example: <style>@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');</style>
 - Use exact colors from spec — no approximations
 - Show all designed pages as scrollable sections in one file
 - Separate pages with a clear label bar showing page name

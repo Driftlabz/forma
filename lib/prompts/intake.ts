@@ -12,13 +12,8 @@ RULES:
 2. Maximum 5 designed pages. If user requests more, keep the
    5 most important and note what was deprioritized in a
    "notes" field
-3. Infer design mode from niche:
-   - AI SaaS / Dev Tool → CINEMATIC
-   - Agency / Studio → EDITORIAL
-   - Startup / Product → CINEMATIC
-   - E-commerce → EDITORIAL
-   - Portfolio → EDITORIAL or BRUTALIST (infer from audience)
-   - Other → CINEMATIC (default)
+3. Pass the mode field through exactly as provided — never override or infer it.
+   The user selected their design mode explicitly. Do not change it.
 4. If brand colors are provided, note them for the Design Agent
 5. If reference URLs or images are provided, note them
 6. If brand voice is provided, note it
