@@ -232,7 +232,10 @@ export default function PreviewPage() {
 
       {/* Full-viewport iframe */}
       <iframe
-        srcDoc={spec.preview_html}
+        srcDoc={spec.preview_html.replace(
+          /<head([^>]*)>/i,
+          '<head$1><style>html,body{background:#050505!important;color:#ECEAE5;}</style>'
+        )}
         title={`${project?.name ?? 'Preview'} — Design Preview`}
         sandbox="allow-scripts allow-same-origin"
         style={{
