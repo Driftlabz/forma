@@ -36,6 +36,7 @@ const STATUS_STEP_MAP: Record<string, number> = {
   designing: 1,
   preview: 5,
   revision: 5,
+  approved: 5,
   building: 5,
   complete: 5,
   failed: -1,
@@ -128,8 +129,8 @@ export default function ProjectPage() {
           const newStatus = (payload.new as { status: ProjectStatus }).status
           setStatus(newStatus)
 
-          // If just hit preview, reload spec
-          if (newStatus === 'preview' || newStatus === 'complete') {
+          // If just hit preview/approved/complete, reload spec
+          if (newStatus === 'preview' || newStatus === 'approved' || newStatus === 'complete') {
             void fetch(`/api/projects/${projectId}/spec`)
               .then((r) => r.json())
               .then((d: { spec: { mode: string; design_spec: Record<string, unknown>; qa_result: { overall: string } | null } | null }) => {
@@ -295,6 +296,22 @@ export default function ProjectPage() {
             >
               View Preview
             </Link>
+          </div>
+        )}
+
+        {/* STATE: approved */}
+        {status === 'approved' && (
+          <div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+              <CheckIcon />
+              <span style={{ fontFamily: bodyFont, fontSize: '13px', color: '#1A6FFF', letterSpacing: '0.06em', textTransform: 'uppercase' as const }}>Approved</span>
+            </div>
+            <h1 style={{ fontFamily: headingFont, fontSize: '36px', fontWeight: 700, color: '#ECEAE5', letterSpacing: '-0.02em', margin: '0 0 12px 0' }}>
+              Design approved
+            </h1>
+            <p style={{ fontFamily: bodyFont, fontSize: '16px', color: 'rgba(236,234,229,0.45)', margin: '0 0 40px 0' }}>
+              Your design is locked in. The build stage is coming soon.
+            </p>
           </div>
         )}
 

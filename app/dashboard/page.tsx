@@ -8,6 +8,7 @@ const statusColors: Record<ProjectStatus, string> = {
   designing: 'bg-[#1A6FFF]/20 text-[#1A6FFF] border border-[#1A6FFF]/30',
   preview: 'bg-[#CA8A04]/20 text-[#CA8A04] border border-[#CA8A04]/30',
   revision: 'bg-[#CA8A04]/20 text-[#CA8A04] border border-[#CA8A04]/30',
+  approved: 'bg-[#1A6FFF]/20 text-[#1A6FFF] border border-[#1A6FFF]/30',
   building: 'bg-[#1A6FFF]/20 text-[#1A6FFF] border border-[#1A6FFF]/30',
   complete: 'bg-[#16A34A]/20 text-[#16A34A] border border-[#16A34A]/30',
   failed: 'bg-[#DC2626]/20 text-[#DC2626] border border-[#DC2626]/30',

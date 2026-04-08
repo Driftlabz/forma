@@ -1,5 +1,5 @@
 export type ProjectStatus =
-  'intake' | 'designing' | 'preview' | 'revision' | 'building' | 'complete' | 'failed'
+  'intake' | 'designing' | 'preview' | 'revision' | 'approved' | 'building' | 'complete' | 'failed'
 
 export type BuildStepStatus = 'pending' | 'running' | 'complete' | 'failed'
 

@@ -25,7 +25,8 @@ export async function POST(
       return NextResponse.json({ error: 'Project not found', code: 'NOT_FOUND' }, { status: 404 })
     }
 
-    if (project.status !== 'failed') {
+    const retryableStatuses = ['failed', 'preview', 'revision']
+    if (!retryableStatuses.includes(project.status)) {
       return NextResponse.json(
         { error: `Cannot retry — project status is '${project.status}'`, code: 'INVALID_STATUS' },
         { status: 409 }
