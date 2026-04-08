@@ -30,6 +30,7 @@ export interface Intake {
   niche: Niche
   audience: string
   key_emotion: KeyEmotion
+  mode: DesignMode
   designed_pages: string[]
   cms_pages: string[]
   ref_urls: string[]

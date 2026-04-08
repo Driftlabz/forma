@@ -47,6 +47,7 @@ export async function POST(
       niche: sanitized.niche ?? '',
       audience: sanitized.audience ?? '',
       key_emotion: sanitized.key_emotion ?? sanitized.keyEmotion ?? '',
+      mode: sanitized.mode ?? 'CINEMATIC',
       designed_pages: sanitized.designed_pages ?? sanitized.designedPages ?? [],
       cms_pages: sanitized.cms_pages ?? sanitized.cmsPages ?? [],
       ref_urls: sanitized.refUrls ?? sanitized.ref_urls ?? [],
