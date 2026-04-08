@@ -19,7 +19,7 @@ export async function runDesignAgent(
       systemPrompt: DESIGN_SYSTEM_PROMPT,
       userMessage,
       useHaiku: false,
-      maxTokens: 8000,
+      maxTokens: 12000,
       timeoutMs: 120000,
     })
 
