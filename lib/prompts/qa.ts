@@ -24,7 +24,7 @@ You use Haiku model — be fast and decisive.
 3. TYPOGRAPHY
    - Space Grotesk: H1/H2/H3 only
    - Inter: everything else
-   - Allowed sizes: 11|13|16|18|24|32|48|64|96px
+   - Allowed sizes: 11|13|16|18|32|48|64|96px
    - Allowed weights: 400|500|600|700
    FAIL IF: wrong font for role, wrong size, wrong weight
 
