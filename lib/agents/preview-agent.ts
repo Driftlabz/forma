@@ -11,11 +11,14 @@ export async function runPreviewAgent(
       systemPrompt: PREVIEW_SYSTEM_PROMPT,
       userMessage,
       useHaiku: false,
-      maxTokens: 8000,
+      maxTokens: 12000,
       timeoutMs: 150000,
     })
 
-    const trimmed = html.trim()
+    // Strip markdown code fences if Claude wrapped the HTML
+    const fenceMatch = html.match(/```(?:html)?\s*([\s\S]*?)```/i)
+    const trimmed = (fenceMatch ? fenceMatch[1] : html).trim()
+
     if (!trimmed.toLowerCase().startsWith('<!doctype html')) {
       throw new Error('Preview agent response is not valid HTML')
     }
