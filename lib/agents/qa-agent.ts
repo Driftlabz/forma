@@ -1,6 +1,6 @@
 import { callClaude } from '../claude'
 import { QA_SYSTEM_PROMPT } from '../prompts/qa'
-import { extractJSON } from '../utils'
+import { repairJSON } from '../utils'
 
 export async function runQAAgent(
   designSpec: Record<string, unknown>
@@ -15,7 +15,7 @@ export async function runQAAgent(
       maxTokens: 2000,
     })
 
-    const parsed: unknown = JSON.parse(extractJSON(raw))
+    const parsed: unknown = repairJSON(raw)
     if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
       throw new Error('Invalid QA result response shape')
     }
