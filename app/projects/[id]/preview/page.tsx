@@ -6,6 +6,43 @@ import { useParams, useRouter } from 'next/navigation'
 const headingFont = 'var(--font-space-grotesk), sans-serif'
 const bodyFont = 'var(--font-inter), sans-serif'
 
+const INJECTED_STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap');
+  :root {
+    --font-space-grotesk: 'Space Grotesk', sans-serif;
+    --font-inter: 'Inter', sans-serif;
+  }
+  html, body {
+    background: #050505 !important;
+    color: #ECEAE5;
+    font-family: 'Inter', sans-serif;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', sans-serif;
+  }
+`.trim()
+
+function preparePreviewHtml(html: string): string {
+  // 1. Strip any Google Fonts <link> tags — we inject our own via @import
+  const stripped = html.replace(
+    /<link[^>]+fonts\.(googleapis|gstatic)\.com[^>]*>/gi,
+    ''
+  )
+
+  // 2. Inject base styles immediately after <head>
+  const injected = stripped.replace(
+    /<head([^>]*)>/i,
+    `<head$1><style>${INJECTED_STYLES}</style>`
+  )
+
+  // 3. If no <head> tag found, prepend a minimal one
+  if (injected === stripped) {
+    return `<head><style>${INJECTED_STYLES}</style></head>${html}`
+  }
+
+  return injected
+}
+
 interface ProjectData {
   id: string
   name: string
@@ -232,12 +269,9 @@ export default function PreviewPage() {
 
       {/* Full-viewport iframe */}
       <iframe
-        srcDoc={spec.preview_html.replace(
-          /<head([^>]*)>/i,
-          '<head$1><style>html,body{background:#050505!important;color:#ECEAE5;}</style>'
-        )}
+        srcDoc={preparePreviewHtml(spec.preview_html)}
         title={`${project?.name ?? 'Preview'} — Design Preview`}
-        sandbox="allow-scripts allow-same-origin"
+        sandbox="allow-scripts allow-same-origin allow-popups"
         style={{
           position: 'fixed',
           top: '56px',
