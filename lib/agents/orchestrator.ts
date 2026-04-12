@@ -3,6 +3,11 @@ import { runDesignAgent } from './design-agent'
 import { runQAAgent } from './qa-agent'
 import { runPreviewAgent } from './preview-agent'
 
+interface ResourceBundle {
+  referenceContent: string[]
+  photoUrls: string[]
+}
+
 interface PipelineResult {
   intake: Record<string, unknown>
   spec: Record<string, unknown>
@@ -13,7 +18,8 @@ interface PipelineResult {
 }
 
 export async function runDesignPipeline(
-  rawIntake: Record<string, unknown>
+  rawIntake: Record<string, unknown>,
+  resources?: ResourceBundle
 ): Promise<PipelineResult> {
   const errors: string[] = []
   let intake: Record<string, unknown> = {}
@@ -39,7 +45,7 @@ export async function runDesignPipeline(
   // Step 2: Design Agent
   console.log('[Pipeline] Step 2: Running Design Agent...')
   try {
-    spec = await runDesignAgent(intake)
+    spec = await runDesignAgent(intake, undefined, resources)
     console.log('[Pipeline] Design Agent complete. Pages:', (spec.pages as unknown[] | undefined)?.length ?? 0)
   } catch (err) {
     const msg = typeof err === 'object' && err !== null && 'error' in err

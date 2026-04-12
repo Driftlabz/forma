@@ -4,12 +4,27 @@ import { repairJSON } from '../utils'
 
 const REQUIRED_SPEC_FIELDS = ['mode', 'niche', 'audience', 'keyEmotion', 'eliteMarkers', 'slopPatterns', 'colorStyles', 'pages', 'cmsCollections']
 
+interface ResourceBundle {
+  referenceContent: string[]
+  photoUrls: string[]
+}
+
 export async function runDesignAgent(
   intake: Record<string, unknown>,
-  qaFailures?: string[]
+  qaFailures?: string[],
+  resources?: ResourceBundle
 ): Promise<Record<string, unknown>> {
   try {
     let userMessage = `Generate a complete design spec for this project:\n${JSON.stringify(intake, null, 2)}`
+
+    if (resources) {
+      if (resources.referenceContent.length > 0) {
+        userMessage += `\n\nREFERENCE CONTENT (scraped from client's reference URLs — use for tone, structure, and content signals):\n${resources.referenceContent.join('\n\n---\n\n')}`
+      }
+      if (resources.photoUrls.length > 0) {
+        userMessage += `\n\nAVAILABLE PHOTOS (Unsplash — you may reference these URLs in image layers):\n${resources.photoUrls.join('\n')}`
+      }
+    }
 
     if (qaFailures && qaFailures.length > 0) {
       userMessage += `\n\nQA FAILURES TO FIX — redesign to resolve all of these:\n${qaFailures.map((f, i) => `${i + 1}. ${f}`).join('\n')}`

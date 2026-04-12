@@ -1,4 +1,49 @@
 import { runDesignPipeline } from './agents/orchestrator'
+import { scrapeReference, searchPhotos } from './services'
+
+interface ResourceBundle {
+  referenceContent: string[]
+  photoUrls: string[]
+}
+
+async function runReferenceIntelligence(intake: Record<string, unknown>): Promise<ResourceBundle> {
+  const bundle: ResourceBundle = { referenceContent: [], photoUrls: [] }
+
+  // Env key warnings — degrade gracefully if missing
+  const warnings: string[] = []
+  if (!process.env.FIRECRAWL_API_KEY) warnings.push('FIRECRAWL_API_KEY')
+  if (!process.env.UNSPLASH_ACCESS_KEY) warnings.push('UNSPLASH_ACCESS_KEY')
+  if (!process.env.FAL_KEY) warnings.push('FAL_KEY')
+  if (!process.env.GEMINI_API_KEY) warnings.push('GEMINI_API_KEY')
+  if (warnings.length > 0) {
+    console.warn('[Pipeline] Missing env keys (services will degrade gracefully):', warnings.join(', '))
+  }
+
+  const tasks: Promise<void>[] = []
+
+  // Scrape reference URLs (max 3, parallel)
+  const refUrls = Array.isArray(intake.refUrls) ? (intake.refUrls as string[]).slice(0, 3) : []
+  if (refUrls.length > 0) {
+    tasks.push(
+      Promise.all(refUrls.map(url => scrapeReference(url))).then(results => {
+        bundle.referenceContent = results.filter((r): r is string => r !== null)
+        console.log(`[Pipeline] Firecrawl scraped ${bundle.referenceContent.length}/${refUrls.length} URLs`)
+      })
+    )
+  }
+
+  // Fetch Unsplash photos using niche as query
+  const niche = typeof intake.niche === 'string' ? intake.niche : 'technology website'
+  tasks.push(
+    searchPhotos(niche, 3).then(urls => {
+      bundle.photoUrls = urls
+      console.log(`[Pipeline] Unsplash returned ${urls.length} photos`)
+    })
+  )
+
+  await Promise.all(tasks)
+  return bundle
+}
 
 export async function runPipelineInBackground(
   projectId: string,
@@ -9,7 +54,11 @@ export async function runPipelineInBackground(
   const supabase = createClient()
 
   try {
-    const result = await runDesignPipeline(intake)
+    // Pre-Design Agent step: gather reference intelligence
+    console.log('[Pipeline] Pre-step: Running reference intelligence...')
+    const resources = await runReferenceIntelligence(intake)
+
+    const result = await runDesignPipeline(intake, resources)
 
     const specPayload = {
       project_id: projectId,
