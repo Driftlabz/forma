@@ -1,6 +1,5 @@
 import FirecrawlApp from '@mendable/firecrawl-js'
 
-const TIMEOUT_MS = 10_000
 const MAX_CHARS = 2000
 
 export async function scrapeReference(url: string): Promise<string | null> {
@@ -11,22 +10,17 @@ export async function scrapeReference(url: string): Promise<string | null> {
       return null
     }
 
-    const app = new FirecrawlApp({ apiKey: key })
+    const client = new FirecrawlApp({ apiKey: key })
 
-    const timeoutPromise = new Promise<null>((resolve) =>
-      setTimeout(() => resolve(null), TIMEOUT_MS)
-    )
+    const scrapeWithTimeout = Promise.race([
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (client as unknown as any).scrapeUrl(url, { formats: ['markdown'] }),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 5000)),
+    ]) as Promise<{ success?: boolean; markdown?: string }>
 
-    const scrapePromise = (async () => {
-      const result = await app.scrape(url, { formats: ['markdown'] }) as {
-        success?: boolean
-        markdown?: string
-      }
-      if (!result.success || !result.markdown) return null
-      return result.markdown.slice(0, MAX_CHARS)
-    })()
-
-    return await Promise.race([scrapePromise, timeoutPromise])
+    const result = await scrapeWithTimeout
+    if (!result.success || !result.markdown) return null
+    return result.markdown.slice(0, MAX_CHARS)
   } catch (err) {
     console.warn('[Firecrawl] Error:', err instanceof Error ? err.message : String(err))
     return null

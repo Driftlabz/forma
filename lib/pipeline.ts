@@ -54,9 +54,17 @@ export async function runPipelineInBackground(
   const supabase = createClient()
 
   try {
-    // Pre-Design Agent step: gather reference intelligence
+    // Pre-Design Agent step: gather reference intelligence (hard 15s cap)
     console.log('[Pipeline] Pre-step: Running reference intelligence...')
-    const resources = await runReferenceIntelligence(intake)
+    const resources = await Promise.race([
+      runReferenceIntelligence(intake),
+      new Promise<ResourceBundle>((resolve) =>
+        setTimeout(() => {
+          console.warn('[Pipeline] Reference intelligence timed out after 15s — continuing with empty bundle')
+          resolve({ referenceContent: [], photoUrls: [] })
+        }, 15000)
+      ),
+    ])
 
     const result = await runDesignPipeline(intake, resources)
 
