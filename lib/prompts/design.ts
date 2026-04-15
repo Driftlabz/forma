@@ -67,6 +67,10 @@ SLOP AUDIT — FORBIDDEN PATTERNS — AUTO REJECT ANY OF THESE:
 11. Generic stock photo hero backgrounds
 12. Stats section with three centered large numbers in a row
 
+13. Using any CSS variable (var(--x)) that you did not explicitly declare in your own :root {} block in this output
+14. Using the accent color as background-color on any section or large container. Accent is for buttons, links, and inline highlights only.
+15. Any monospace or code font unless the brand is explicitly a code editor, terminal, or developer API product
+
 If ANY of these appear in your planned layout — redesign before outputting. No exceptions. No excuses.
 
 REQUIRED ELITE MARKERS — MINIMUM 3 PER PAGE:
