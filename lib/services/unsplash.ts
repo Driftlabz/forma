@@ -6,10 +6,16 @@ export async function searchPhotos(query: string, count: number = 3): Promise<st
       return []
     }
 
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), 5000)
+
     const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=${count}&orientation=landscape`
     const res = await fetch(url, {
       headers: { Authorization: `Client-ID ${key}` },
+      signal: controller.signal,
     })
+
+    clearTimeout(timeoutId)
 
     if (!res.ok) {
       console.warn(`[Unsplash] Request failed: ${res.status} ${res.statusText}`)
