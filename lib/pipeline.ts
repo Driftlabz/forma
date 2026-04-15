@@ -1,5 +1,5 @@
 import { runDesignPipeline } from './agents/orchestrator'
-import { scrapeReference, searchPhotos } from './services'
+import { searchPhotos } from './services'
 
 interface ResourceBundle {
   referenceContent: string[]
@@ -21,16 +21,8 @@ async function runReferenceIntelligence(intake: Record<string, unknown>): Promis
 
   const tasks: Promise<void>[] = []
 
-  // Scrape reference URLs (max 3, parallel)
-  const refUrls = Array.isArray(intake.refUrls) ? (intake.refUrls as string[]).slice(0, 3) : []
-  if (refUrls.length > 0) {
-    tasks.push(
-      Promise.all(refUrls.map(url => scrapeReference(url))).then(results => {
-        bundle.referenceContent = results.filter((r): r is string => r !== null)
-        console.log(`[Pipeline] Firecrawl scraped ${bundle.referenceContent.length}/${refUrls.length} URLs`)
-      })
-    )
-  }
+  // Firecrawl scraping temporarily disabled — hanging issue, will fix later
+  // const refUrls = Array.isArray(intake.refUrls) ? (intake.refUrls as string[]).slice(0, 3) : []
 
   // Fetch Unsplash photos using niche as query
   const niche = typeof intake.niche === 'string' ? intake.niche : 'technology website'
