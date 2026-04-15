@@ -3,13 +3,11 @@
 import { useState, useRef, useCallback } from 'react'
 import { useRouter, useParams } from 'next/navigation'
 import Link from 'next/link'
-import DesignModeSelector from '@/components/intake/DesignModeSelector'
+import DesignModeSelector, { type DesignMode } from '@/components/intake/DesignModeSelector'
 import { uploadReferenceImage } from '@/lib/storage'
 
 const headingFont = 'var(--font-space-grotesk), sans-serif'
 const bodyFont = 'var(--font-inter), sans-serif'
-
-type DesignMode = 'CINEMATIC' | 'EDITORIAL' | 'BRUTALIST'
 
 const DESIGNED_PAGES = [
   'Landing / Home',
@@ -47,6 +45,7 @@ const KEY_EMOTIONS = [
 interface IntakeFormState {
   mode: DesignMode
   businessName: string
+  productDescription: string
   niche: string
   audience: string
   keyEmotion: string
@@ -135,6 +134,7 @@ export default function IntakePage() {
   const [form, setForm] = useState<IntakeFormState>({
     mode: 'CINEMATIC',
     businessName: '',
+    productDescription: '',
     niche: '',
     audience: '',
     keyEmotion: '',
@@ -158,6 +158,7 @@ export default function IntakePage() {
 
   const canSubmit =
     form.businessName.trim().length > 0 &&
+    form.productDescription.trim().length > 0 &&
     form.niche.length > 0 &&
     form.designedPages.length > 0 &&
     !submitting
@@ -214,6 +215,7 @@ export default function IntakePage() {
 
     const payload = {
       businessName: form.businessName.trim(),
+      productDescription: form.productDescription.trim(),
       niche: form.niche,
       audience: form.audience.trim(),
       keyEmotion: form.keyEmotion,
@@ -296,6 +298,21 @@ export default function IntakePage() {
             <div style={{ marginBottom: '24px' }}>
               <label style={labelStyle}>Business Name <span style={{ color: '#DC2626' }}>*</span></label>
               <input type="text" value={form.businessName} onChange={(e) => setForm((p) => ({ ...p, businessName: e.target.value }))} maxLength={100} required placeholder="e.g. Nexus AI" style={inputStyle} onFocus={focusInput} onBlur={blurInput} />
+            </div>
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>What Does Your Product Do? <span style={{ color: '#DC2626' }}>*</span></label>
+              <textarea
+                value={form.productDescription}
+                onChange={(e) => setForm((p) => ({ ...p, productDescription: e.target.value }))}
+                maxLength={500}
+                required
+                placeholder="e.g. AI meeting notes app that transcribes and summarizes calls in real time"
+                style={{ ...textareaStyle, height: '80px' }}
+                onFocus={focusInput}
+                onBlur={blurInput}
+              />
+              <div style={{ fontFamily: bodyFont, fontSize: '11px', color: 'rgba(236,234,229,0.25)', marginTop: '4px', textAlign: 'right' as const }}>{form.productDescription.length}/500</div>
             </div>
 
             <div style={{ marginBottom: '24px' }}>

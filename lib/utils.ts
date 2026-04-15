@@ -127,5 +127,15 @@ export function sanitizeIntake(raw: Record<string, unknown>): Record<string, unk
     sanitized.keyEmotion = sanitizeText(String(raw.keyEmotion), 100)
   }
 
+  // Mode — pass through exactly as provided, never override
+  if (raw.mode !== undefined) {
+    sanitized.mode = sanitizeText(String(raw.mode), 50)
+  }
+
+  // Product description
+  if (raw.productDescription !== undefined) {
+    sanitized.productDescription = sanitizeText(String(raw.productDescription), 500)
+  }
+
   return sanitized
 }

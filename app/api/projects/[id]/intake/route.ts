@@ -44,6 +44,7 @@ export async function POST(
     const intakePayload = {
       project_id: params.id,
       business_name: sanitized.business_name ?? sanitized.businessName ?? '',
+      product_description: sanitized.productDescription ?? '',
       niche: sanitized.niche ?? '',
       audience: sanitized.audience ?? '',
       key_emotion: sanitized.key_emotion ?? sanitized.keyEmotion ?? '',

@@ -3,7 +3,7 @@ export type ProjectStatus =
 
 export type BuildStepStatus = 'pending' | 'running' | 'complete' | 'failed'
 
-export type DesignMode = 'CINEMATIC' | 'EDITORIAL' | 'BRUTALIST'
+export type DesignMode = 'CINEMATIC' | 'EDITORIAL_LIGHT' | 'BOLD' | 'MINIMAL' | 'PRODUCT_LED' | 'WARM_ORGANIC'
 
 export type Niche =
   'AI SaaS / Dev Tool' | 'Agency / Studio' | 'Startup / Product' |
@@ -27,6 +27,7 @@ export interface Intake {
   id: string
   project_id: string
   business_name: string
+  product_description: string
   niche: Niche
   audience: string
   key_emotion: KeyEmotion
