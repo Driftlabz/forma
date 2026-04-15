@@ -139,3 +139,40 @@ export function sanitizeIntake(raw: Record<string, unknown>): Record<string, unk
 
   return sanitized
 }
+
+/**
+ * Post-processes preview HTML to replace any var(--x) references that are not
+ * declared in the output's own :root {} block with a sensible fallback from
+ * the declared palette. This prevents broken CSS caused by the Design Agent
+ * inventing colour names that the Preview Agent never declares.
+ */
+export function enforceDefinedVariables(html: string): string {
+  // 1. Extract the :root block and collect declared variable names
+  const rootMatch = html.match(/:root\s*\{([^}]+)\}/)
+  if (!rootMatch) return html // no :root block — nothing to enforce
+
+  const rootBlock = rootMatch[1]
+  const declaredVars = new Set<string>()
+  const declRegex = /(--[\w-]+)\s*:/g
+  let m: RegExpExecArray | null
+  while ((m = declRegex.exec(rootBlock)) !== null) {
+    declaredVars.add(m[1])
+  }
+  if (declaredVars.size === 0) return html
+
+  // 2. Fallback map: undeclared var name → nearest declared variable
+  function fallback(varName: string): string {
+    const n = varName.toLowerCase()
+    if (n.includes('bg') || n.includes('background')) return 'var(--background)'
+    if (n.includes('accent') || n.includes('cta') || n.includes('highlight')) return 'var(--accent)'
+    if (n.includes('surface') || n.includes('card')) return 'var(--surface)'
+    if (n.includes('border')) return 'var(--border)'
+    if (n.includes('text') || n.includes('muted') || n.includes('logo')) return 'var(--muted)'
+    return 'var(--muted)'
+  }
+
+  // 3. Replace every var(--x) where --x is not declared
+  return html.replace(/var\((--[\w-]+)\)/g, (match, varName: string) => {
+    return declaredVars.has(varName) ? match : fallback(varName)
+  })
+}

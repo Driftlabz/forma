@@ -2,10 +2,12 @@ import { runIntakeAgent } from './intake-agent'
 import { runDesignAgent } from './design-agent'
 import { runQAAgent } from './qa-agent'
 import { runPreviewAgent } from './preview-agent'
+import { enforceDefinedVariables } from '../utils'
 
 interface ResourceBundle {
   referenceContent: string[]
   photoUrls: string[]
+  referenceScreenshot: string | null
 }
 
 interface PipelineResult {
@@ -104,7 +106,7 @@ export async function runDesignPipeline(
   // Step 5: Preview Agent
   console.log('[Pipeline] Step 5: Running Preview Agent...')
   try {
-    previewHtml = await runPreviewAgent(spec)
+    previewHtml = enforceDefinedVariables(await runPreviewAgent(spec))
     console.log('[Pipeline] Preview Agent complete. HTML length:', previewHtml.length)
   } catch (err) {
     const msg = typeof err === 'object' && err !== null && 'error' in err

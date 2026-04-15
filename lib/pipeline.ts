@@ -1,13 +1,14 @@
 import { runDesignPipeline } from './agents/orchestrator'
-import { searchPhotos } from './services'
+import { searchPhotos, captureScreenshot } from './services'
 
-interface ResourceBundle {
+export interface ResourceBundle {
   referenceContent: string[]
   photoUrls: string[]
+  referenceScreenshot: string | null
 }
 
 async function runReferenceIntelligence(intake: Record<string, unknown>): Promise<ResourceBundle> {
-  const bundle: ResourceBundle = { referenceContent: [], photoUrls: [] }
+  const bundle: ResourceBundle = { referenceContent: [], photoUrls: [], referenceScreenshot: null }
 
   // Env key warnings — degrade gracefully if missing
   const warnings: string[] = []
@@ -15,6 +16,7 @@ async function runReferenceIntelligence(intake: Record<string, unknown>): Promis
   if (!process.env.UNSPLASH_ACCESS_KEY) warnings.push('UNSPLASH_ACCESS_KEY')
   if (!process.env.FAL_KEY) warnings.push('FAL_KEY')
   if (!process.env.GEMINI_API_KEY) warnings.push('GEMINI_API_KEY')
+  if (!process.env.SCREENSHOTONE_API_KEY) warnings.push('SCREENSHOTONE_API_KEY')
   if (warnings.length > 0) {
     console.warn('[Pipeline] Missing env keys (services will degrade gracefully):', warnings.join(', '))
   }
@@ -24,7 +26,19 @@ async function runReferenceIntelligence(intake: Record<string, unknown>): Promis
   // Firecrawl scraping temporarily disabled — hanging issue, will fix later
   // const refUrls = Array.isArray(intake.refUrls) ? (intake.refUrls as string[]).slice(0, 3) : []
 
-  // Fetch Unsplash photos using niche as query
+  // Screenshot capture — run in parallel on first ref URL if present
+  const refUrls = Array.isArray(intake.refUrls) ? (intake.refUrls as string[]) : []
+  const firstUrl = refUrls.find((u) => typeof u === 'string' && u.startsWith('http'))
+  if (firstUrl) {
+    tasks.push(
+      captureScreenshot(firstUrl).then((screenshot) => {
+        bundle.referenceScreenshot = screenshot
+        if (screenshot) console.log('[Pipeline] Screenshot captured for:', firstUrl)
+      })
+    )
+  }
+
+  // Unsplash photos using niche as query
   const niche = typeof intake.niche === 'string' ? intake.niche : 'technology website'
   tasks.push(
     searchPhotos(niche, 3).then(urls => {
@@ -48,15 +62,19 @@ export async function runPipelineInBackground(
   try {
     // Pre-Design Agent step: gather reference intelligence (hard 15s cap)
     console.log('[Pipeline] Pre-step: Running reference intelligence...')
-    const resources = await Promise.race([
-      runReferenceIntelligence(intake),
-      new Promise<ResourceBundle>((resolve) =>
-        setTimeout(() => {
-          console.warn('[Pipeline] Reference intelligence timed out after 15s — continuing with empty bundle')
-          resolve({ referenceContent: [], photoUrls: [] })
-        }, 15000)
-      ),
-    ])
+
+    // Use manual promise so we can clearTimeout when the main work finishes,
+    // avoiding the spurious "timed out" log when services complete quickly.
+    const resources = await new Promise<ResourceBundle>((resolve) => {
+      const timer = setTimeout(() => {
+        console.warn('[Pipeline] Reference intelligence timed out after 15s — continuing with empty bundle')
+        resolve({ referenceContent: [], photoUrls: [], referenceScreenshot: null })
+      }, 15000)
+
+      runReferenceIntelligence(intake)
+        .then((result) => { clearTimeout(timer); resolve(result) })
+        .catch(() => { clearTimeout(timer); resolve({ referenceContent: [], photoUrls: [], referenceScreenshot: null }) })
+    })
 
     const result = await runDesignPipeline(intake, resources)
 

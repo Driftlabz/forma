@@ -42,6 +42,7 @@ export async function callClaude({
   maxTokens = 4000,
   useHaiku = false,
   timeoutMs = 60000,
+  imageBase64,
 }: {
   systemPrompt: string
   userMessage: string
@@ -49,8 +50,25 @@ export async function callClaude({
   maxTokens?: number
   useHaiku?: boolean
   timeoutMs?: number
+  /** Optional base64-encoded PNG image to include alongside the user message */
+  imageBase64?: string
 }): Promise<string> {
   const selectedModel = useHaiku ? 'claude-haiku-4-5-20251001' : model
+
+  // Build user content — include image if provided
+  const userContent: Anthropic.MessageParam['content'] = imageBase64
+    ? [
+        {
+          type: 'image' as const,
+          source: {
+            type: 'base64' as const,
+            media_type: 'image/png' as const,
+            data: imageBase64,
+          },
+        },
+        { type: 'text' as const, text: userMessage },
+      ]
+    : userMessage
 
   try {
     const response = await withTimeout(
@@ -58,7 +76,7 @@ export async function callClaude({
         model: selectedModel,
         max_tokens: maxTokens,
         system: systemPrompt,
-        messages: [{ role: 'user', content: userMessage }],
+        messages: [{ role: 'user', content: userContent }],
       }),
       timeoutMs
     )

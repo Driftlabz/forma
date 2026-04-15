@@ -7,6 +7,7 @@ const REQUIRED_SPEC_FIELDS = ['mode', 'niche', 'audience', 'keyEmotion', 'eliteM
 interface ResourceBundle {
   referenceContent: string[]
   photoUrls: string[]
+  referenceScreenshot: string | null
 }
 
 export async function runDesignAgent(
@@ -24,6 +25,9 @@ export async function runDesignAgent(
       if (resources.photoUrls.length > 0) {
         userMessage += `\n\nAVAILABLE PHOTOS (Unsplash — you may reference these URLs in image layers):\n${resources.photoUrls.join('\n')}`
       }
+      if (resources.referenceScreenshot) {
+        userMessage += `\n\nA screenshot of the client's reference site is attached as an image. Analyze it for visual aesthetic signals: color temperature, layout density, typographic weight, spacing philosophy, and overall atmosphere. Use these signals to inform your archetype selection and design decisions.`
+      }
     }
 
     if (qaFailures && qaFailures.length > 0) {
@@ -36,6 +40,8 @@ export async function runDesignAgent(
       useHaiku: false,
       maxTokens: 12000,
       timeoutMs: 120000,
+      // Pass screenshot as vision input if available
+      imageBase64: resources?.referenceScreenshot ?? undefined,
     })
 
     const parsed: unknown = repairJSON(raw)
